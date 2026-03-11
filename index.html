@@ -372,6 +372,49 @@
     .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
     .feature-card p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; }
 
+    /* ========== Benefits Grid ========== */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .benefits-grid { grid-template-columns: 1fr; } }
+    .benefit-card {
+      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gradient-accent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .benefit-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-glow);
+    }
+    .benefit-card:hover::before { opacity: 1; }
+    .benefit-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent-subtle); color: var(--accent);
+      font-size: 0.8rem; font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .benefit-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+    .benefit-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
     /* ========== Architecture ========== */
     .arch-diagram {
       display: grid;
@@ -610,6 +653,7 @@
     <ul class="nav-links">
       <li><a href="#orchestrator">AI Orchestrator</a></li>
       <li><a href="#features">Features</a></li>
+      <li><a href="#benefits">Benefits</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#screenshots">Screenshots</a></li>
       <li><a href="#getting-started">Get Started</a></li>
@@ -787,6 +831,64 @@
         <div class="feature-icon purple">&#9000;</div>
         <h3>Agent Control</h3>
         <p>Control Armada directly using your favorite agents. Use Claude Code, Codex, or any MCP-compatible agent to orchestrate fleets, dispatch missions, and monitor progress from your existing workflow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BENEFITS ==================== -->
+<section class="section section-alt" id="benefits">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Why Armada</span>
+      <h2>Built for developers who ship faster</h2>
+      <p>Tangible advantages that transform how you work with AI coding agents.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">1</div>
+        <h3>Single Pane of Glass</h3>
+        <p>Monitor and manage all AI agent work across every project from one unified dashboard, eliminating the need to juggle multiple terminals and windows.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">2</div>
+        <h3>Reduced Context-Switching</h3>
+        <p>Full mission history, logs, diffs, and signals are preserved, so you can pick up exactly where you left off without losing your train of thought.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">3</div>
+        <h3>Scale Across More Projects</h3>
+        <p>Dispatch parallel missions across multiple repositories simultaneously, letting you take on more work than a single developer normally could.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">4</div>
+        <h3>Project Management Meets Conversational AI</h3>
+        <p>Integrate task tracking, prioritization, and workflow orchestration directly into AI coding agents like Claude Code, bridging the gap between planning and execution.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">5</div>
+        <h3>Safe Isolated Worktrees</h3>
+        <p>Every agent operates in its own git worktree, so parallel work never collides and your main branch stays clean until you're ready to merge.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">6</div>
+        <h3>Automated Merge Queues</h3>
+        <p>Completed missions are queued for merge automatically, reducing manual branch management and keeping your integration pipeline flowing.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">7</div>
+        <h3>Auditable Event Trails</h3>
+        <p>Every mission dispatch, status transition, completion, and failure is recorded in a structured event log you can query at any time.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">8</div>
+        <h3>Reproducible Workflows</h3>
+        <p>Voyages capture a batch of missions as a reusable unit; retry a failed voyage or re-dispatch it against a new branch with a single command.</p>
+      </div>
+      <div class="benefit-card fade-in">
+        <div class="benefit-number">9</div>
+        <h3>Team Visibility</h3>
+        <p>Real-time WebSocket updates, a REST API, and desktop notifications keep everyone informed of agent progress without polling or asking around.</p>
       </div>
     </div>
   </div>
