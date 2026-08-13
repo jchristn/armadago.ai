@@ -3,647 +3,360 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Armada - Multi-Agent AI Orchestration</title>
-  <meta name="description" content="Scale yourself with AI. Armada orchestrates fleets of AI coding agents working in parallel on your codebase. One command. Multiple agents. Zero conflicts.">
-  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, developer tools, CLI, parallel development">
+  <title>Armada - Multi-Agent AI Orchestration for Developers</title>
+  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, and queryable memory. One command. Multiple agents. Zero conflicts.">
+  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue">
   <link rel="icon" type="image/png" href="assets/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ========== CSS Variables ========== */
+    /* ========== Tokens ========== */
     :root {
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-      --max-width: 1200px;
-      --nav-height: 64px;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --max-width: 1220px;
+      --nav-height: 68px;
+      --radius: 18px;
+      --radius-sm: 10px;
+      --radius-pill: 100px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: 0.35s var(--ease);
+      --section-pad: clamp(84px, 11vw, 150px);
     }
-
     [data-theme="dark"] {
-      --bg-primary: #0a0e17;
-      --bg-secondary: #111827;
-      --bg-tertiary: #1a2235;
-      --bg-card: #151d2e;
-      --bg-card-hover: #1c2640;
-      --bg-code: #0d1117;
-      --border: #1e2d45;
-      --border-light: #253350;
-      --text-primary: #f0f4fc;
-      --text-secondary: #94a3b8;
-      --text-tertiary: #64748b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --accent-glow: rgba(59, 130, 246, 0.15);
-      --accent-subtle: rgba(59, 130, 246, 0.08);
-      --green: #10b981;
-      --green-subtle: rgba(16, 185, 129, 0.1);
-      --purple: #8b5cf6;
-      --purple-subtle: rgba(139, 92, 246, 0.1);
-      --orange: #f59e0b;
-      --orange-subtle: rgba(245, 158, 11, 0.1);
-      --red: #ef4444;
-      --gradient-hero: linear-gradient(135deg, #0a0e17 0%, #111827 50%, #0f172a 100%);
-      --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
-      --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.1);
+      --bg-primary: #060810;
+      --bg-deep: #04050b;
+      --bg-elev: rgba(255,255,255,0.028);
+      --bg-elev-hover: rgba(255,255,255,0.05);
+      --bg-code: #0a0d17;
+      --bg-nav: rgba(8, 10, 18, 0.72);
+      --panel-tint: rgba(255,255,255,0.014);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.16);
+      --text-primary: #eef2fb;
+      --text-secondary: #9aa7be;
+      --text-tertiary: #616e88;
+      --accent: #5b93ff;
+      --accent-2: #a879ff;
+      --accent-hover: #79a7ff;
+      --accent-glow: rgba(91, 147, 255, 0.30);
+      --accent-subtle: rgba(91, 147, 255, 0.10);
+      --green: #34d399;
+      --purple: #a879ff;
+      --orange: #fbbf24;
+      --red: #fb7185;
+      --gradient-accent: linear-gradient(115deg, #5b93ff 0%, #a879ff 100%);
+      --gradient-text: linear-gradient(115deg, #8fb6ff 0%, #c79bff 100%);
+      --shadow-md: 0 10px 40px rgba(0,0,0,0.45);
+      --shadow-lg: 0 30px 80px rgba(0,0,0,0.6);
+      --shadow-glow: 0 0 60px rgba(91, 147, 255, 0.14);
       --logo-filter: brightness(0) invert(1);
-      --screenshot-border: var(--border);
+      --constellation-opacity: 0.55;
+      --grid-line: rgba(255,255,255,0.024);
     }
-
     [data-theme="light"] {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-tertiary: #f1f5f9;
-      --bg-card: #ffffff;
-      --bg-card-hover: #f8fafc;
-      --bg-code: #1e293b;
-      --border: #e2e8f0;
-      --border-light: #cbd5e1;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-tertiary: #94a3b8;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --accent-glow: rgba(37, 99, 235, 0.1);
-      --accent-subtle: rgba(37, 99, 235, 0.05);
+      --bg-primary: #fbfcfe;
+      --bg-deep: #f4f6fb;
+      --bg-elev: #ffffff;
+      --bg-elev-hover: #ffffff;
+      --bg-code: #0d1220;
+      --bg-nav: rgba(255,255,255,0.78);
+      --panel-tint: rgba(15,23,42,0.02);
+      --border: rgba(15,23,42,0.10);
+      --border-strong: rgba(15,23,42,0.18);
+      --text-primary: #0b1120;
+      --text-secondary: #475069;
+      --text-tertiary: #8593ac;
+      --accent: #3366e6;
+      --accent-2: #7c3aed;
+      --accent-hover: #2451c4;
+      --accent-glow: rgba(51, 102, 230, 0.18);
+      --accent-subtle: rgba(51, 102, 230, 0.07);
       --green: #059669;
-      --green-subtle: rgba(5, 150, 105, 0.08);
       --purple: #7c3aed;
-      --purple-subtle: rgba(124, 58, 237, 0.08);
       --orange: #d97706;
-      --orange-subtle: rgba(217, 119, 6, 0.08);
-      --red: #dc2626;
-      --gradient-hero: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
-      --gradient-accent: linear-gradient(135deg, #2563eb, #7c3aed);
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
-      --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
-      --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.06);
+      --red: #e11d48;
+      --gradient-accent: linear-gradient(115deg, #3366e6 0%, #7c3aed 100%);
+      --gradient-text: linear-gradient(115deg, #3366e6 0%, #7c3aed 100%);
+      --shadow-md: 0 10px 30px rgba(15,23,42,0.08);
+      --shadow-lg: 0 30px 70px rgba(15,23,42,0.14);
+      --shadow-glow: 0 0 50px rgba(51, 102, 230, 0.10);
       --logo-filter: brightness(0);
-      --screenshot-border: var(--border);
+      --constellation-opacity: 0.32;
+      --grid-line: rgba(15,23,42,0.035);
     }
 
     /* ========== Reset & Base ========== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); }
+    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); background: var(--bg-primary); }
     body {
       font-family: var(--font-sans);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      transition: background var(--transition), color var(--transition);
-      overflow-x: hidden;
+      background: transparent; color: var(--text-primary);
+      line-height: 1.65; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      transition: color var(--transition); overflow-x: hidden;
     }
     a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
     a:hover { color: var(--accent-hover); }
     img { max-width: 100%; display: block; }
     code { font-family: var(--font-mono); }
+    ::selection { background: var(--accent-subtle); color: var(--text-primary); }
+    body > *:not(.backdrop) { position: relative; z-index: 1; }
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+
+    /* ========== Cinematic Backdrop ========== */
+    .backdrop { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    #constellation { position: absolute; inset: 0; width: 100%; height: 100%; opacity: var(--constellation-opacity); transition: opacity var(--transition); }
+    .backdrop .glow { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.6; }
+    .backdrop .glow.g1 { top: -20%; right: -6%; width: 820px; height: 620px; background: radial-gradient(ellipse at center, var(--accent-glow), transparent 70%); }
+    .backdrop .glow.g2 { top: 46%; left: -12%; width: 640px; height: 560px; background: radial-gradient(ellipse at center, rgba(168,121,255,0.15), transparent 70%); }
+    .backdrop .glow.g3 { bottom: -14%; right: 10%; width: 620px; height: 560px; background: radial-gradient(ellipse at center, rgba(91,147,255,0.12), transparent 70%); }
+    .backdrop .grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 68px 68px;
+      mask-image: radial-gradient(ellipse 120% 55% at 70% 0%, #000 25%, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse 120% 55% at 70% 0%, #000 25%, transparent 78%);
+    }
 
     /* ========== Navigation ========== */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      height: var(--nav-height);
-      background: rgba(10, 14, 23, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      transition: background var(--transition), border var(--transition);
-    }
-    [data-theme="light"] .nav { background: rgba(255, 255, 255, 0.85); }
-    .nav-inner {
-      max-width: var(--max-width); margin: 0 auto;
-      padding: 0 24px; height: 100%;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-brand {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 700; font-size: 1.2rem; color: var(--text-primary);
-    }
-    .nav-brand img { height: 28px; width: 28px; filter: var(--logo-filter); }
-    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
-    .nav-links a {
-      font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);
-      transition: color var(--transition);
-    }
-    .nav-links a:hover { color: var(--text-primary); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-height); background: transparent; border-bottom: 1px solid transparent; transition: background var(--transition), border var(--transition), backdrop-filter var(--transition); }
+    .nav.scrolled { background: var(--bg-nav); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 1.16rem; letter-spacing: -0.01em; color: var(--text-primary); }
+    .nav-brand img { height: 30px; width: 30px; filter: var(--logo-filter); }
+    .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+    .nav-links a { font-size: 0.83rem; font-weight: 500; color: var(--text-secondary); position: relative; transition: color var(--transition); }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -6px; height: 1.5px; width: 0; background: var(--gradient-accent); transition: width var(--transition); }
+    .nav-links a:hover { color: var(--text-primary); } .nav-links a:hover::after { width: 100%; }
     .nav-actions { display: flex; align-items: center; gap: 12px; }
-    .theme-toggle {
-      background: none; border: 1px solid var(--border); border-radius: 50%;
-      width: 36px; height: 36px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-secondary); font-size: 1.1rem;
-      transition: all var(--transition);
-    }
+    .theme-toggle { background: none; border: 1px solid var(--border); border-radius: 50%; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 1.05rem; transition: all var(--transition); }
     .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-    .nav-github {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: var(--radius-sm);
-      background: var(--bg-tertiary); border: 1px solid var(--border);
-      color: var(--text-primary); font-size: 0.875rem; font-weight: 500;
-      transition: all var(--transition);
-    }
-    .nav-github:hover { border-color: var(--accent); color: var(--accent); }
-    .nav-github svg { width: 18px; height: 18px; fill: currentColor; }
-
-    /* Mobile nav */
+    .nav-github { display: flex; align-items: center; gap: 7px; padding: 9px 17px; border-radius: var(--radius-pill); background: var(--bg-elev); border: 1px solid var(--border); color: var(--text-primary); font-size: 0.83rem; font-weight: 600; transition: all var(--transition); }
+    .nav-github:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+    .nav-github svg { width: 17px; height: 17px; fill: currentColor; }
     .nav-toggle { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; font-size: 1.5rem; padding: 4px; }
-
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .nav-links { display: none; }
       .nav-toggle { display: block; }
-      .nav-links.open {
-        display: flex; flex-direction: column; position: absolute;
-        top: var(--nav-height); left: 0; right: 0;
-        background: var(--bg-secondary); border-bottom: 1px solid var(--border);
-        padding: 16px 24px; gap: 16px;
-      }
+      .nav-links.open { display: flex; flex-direction: column; align-items: flex-start; position: absolute; top: var(--nav-height); left: 0; right: 0; background: var(--bg-nav); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border-bottom: 1px solid var(--border); padding: 20px 24px; gap: 18px; }
     }
 
-    /* ========== Container ========== */
-    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+    /* ========== Shared type ========== */
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.24em; color: var(--accent); }
+    .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); opacity: 0.6; }
+    .gradient { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .link-arrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.92rem; color: var(--text-primary); }
+    .link-arrow .ar { transition: transform var(--transition); color: var(--accent); }
+    .link-arrow:hover { color: var(--text-primary); } .link-arrow:hover .ar { transform: translateX(5px); }
 
-    /* ========== Hero ========== */
-    .hero {
-      padding: 140px 0 80px;
-      background: var(--gradient-hero);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse 800px 600px at 50% 0%, var(--accent-glow), transparent);
-      pointer-events: none;
-    }
-    .hero-content { text-align: center; position: relative; z-index: 1; }
-    .hero-badges {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
-      margin-bottom: 32px;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px; border-radius: 100px;
-      font-size: 0.8rem; font-weight: 500;
-      border: 1px solid var(--border);
-      background: var(--accent-subtle);
-      color: var(--text-secondary);
-    }
-    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.2rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
-    }
-    .hero h1 .gradient {
-      background: var(--gradient-accent);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
-      color: var(--text-secondary);
-      max-width: 640px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-    .hero-ctas {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 14px;
-      margin-bottom: 48px;
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 28px; border-radius: var(--radius-sm);
-      font-size: 0.95rem; font-weight: 600;
-      transition: all var(--transition); cursor: pointer; border: none;
-    }
-    .btn-primary {
-      background: var(--gradient-accent); color: #fff;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4); color: #fff; }
-    .btn-secondary {
-      background: var(--bg-tertiary); color: var(--text-primary);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { border-color: var(--accent); transform: translateY(-2px); }
+    /* Section head (LEFT-aligned, editorial) */
+    .section { padding: var(--section-pad) 0; position: relative; }
+    .divide { border-top: 1px solid var(--border); }
+    .section-head { max-width: 720px; margin-bottom: clamp(44px, 6vw, 70px); }
+    .section-head .eyebrow { margin-bottom: 22px; }
+    .section-head h2 { font-size: clamp(2rem, 4.6vw, 3.3rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; margin-bottom: 20px; }
+    .section-head p { font-size: clamp(1.02rem, 1.6vw, 1.18rem); color: var(--text-secondary); line-height: 1.7; }
+    .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
+    @media (max-width: 720px) { .head-row { flex-direction: column; align-items: flex-start; } }
 
-    .hero-terminal {
-      max-width: 700px; margin: 0 auto;
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      text-align: left;
-    }
-    .terminal-header {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px; border-bottom: 1px solid var(--border);
-    }
-    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-    .terminal-dot:nth-child(1) { background: #ef4444; }
-    .terminal-dot:nth-child(2) { background: #f59e0b; }
-    .terminal-dot:nth-child(3) { background: #10b981; }
-    .terminal-body {
-      padding: 20px 24px; font-family: var(--font-mono);
-      font-size: 0.9rem; line-height: 1.8; color: #e2e8f0;
-    }
-    .terminal-body .prompt { color: var(--green); }
-    .terminal-body .cmd { color: #f0f4fc; }
-    .terminal-body .flag { color: var(--purple); }
-    .terminal-body .string { color: #fbbf24; }
-    .terminal-body .comment { color: #64748b; }
-    .terminal-body .output { color: #94a3b8; }
-    .terminal-body .success { color: var(--green); }
-    .terminal-body .info { color: var(--accent); }
+    /* ========== Buttons ========== */
+    .btn { display: inline-flex; align-items: center; gap: 9px; padding: 14px 30px; border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 600; transition: all var(--transition); cursor: pointer; border: 1px solid transparent; }
+    .btn-primary { background: var(--gradient-accent); color: #fff; box-shadow: 0 8px 30px -8px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.2); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 46px -10px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.25); color: #fff; }
+    .btn-secondary { background: var(--bg-elev); color: var(--text-primary); border-color: var(--border-strong); backdrop-filter: blur(8px); }
+    .btn-secondary:hover { border-color: var(--accent); transform: translateY(-2px); background: var(--bg-elev-hover); }
 
-    /* ========== Section Base ========== */
-    .section {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-    .section-alt { background: var(--bg-secondary); }
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-    .section-label {
-      display: inline-block;
-      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .section-header h2 {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-    .section-header p {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    /* ========== Terminal / code panels ========== */
+    .panel { background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .panel-head { display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 0.78rem; color: var(--text-tertiary); }
+    .tdot { width: 12px; height: 12px; border-radius: 50%; }
+    .tdot.r { background: #fb7185; } .tdot.y { background: #fbbf24; } .tdot.g { background: #34d399; }
+    .terminal-body { padding: 22px 26px; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.9; color: #dbe4f3; }
+    .terminal-body.chat { white-space: pre-wrap; font-size: 0.82rem; line-height: 2; }
+    .prompt { color: var(--green); } .cmd { color: #f0f4fc; font-weight: 500; } .string { color: #fbbf24; }
+    .comment { color: #5d6b82; } .output { color: #8695ad; } .success { color: var(--green); } .info { color: var(--accent); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; cursor: pointer; color: #5d6b82; padding: 5px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: color 0.2s, background 0.2s; }
+    .copy-btn:hover { color: #e2e8f0; background: rgba(255,255,255,0.06); }
+    .copy-btn svg { width: 16px; height: 16px; }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    .cursor { animation: blink 1.1s infinite; color: var(--accent); }
 
-    /* ========== Orchestrator Highlight ========== */
-    .orchestrator {
-      padding: 100px 0;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .orchestrator::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse 900px 500px at 50% 100%, var(--purple-subtle), transparent);
-      pointer-events: none;
-    }
-    .orch-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-      align-items: center; position: relative; z-index: 1;
-    }
-    @media (max-width: 768px) { .orch-grid { grid-template-columns: 1fr; } }
-    .orch-content .section-label { text-align: left; }
-    .orch-content h2 {
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      font-weight: 700; letter-spacing: -0.02em;
-      margin-bottom: 20px;
-    }
-    .orch-content p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 24px; line-height: 1.7; }
-    .orch-agents {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px;
-    }
-    .orch-agent {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 100px;
-      font-size: 0.85rem; font-weight: 600;
-      border: 1px solid var(--border); background: var(--bg-card);
-    }
-    .orch-visual {
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      box-shadow: var(--shadow-lg);
-    }
-    .orch-visual-header {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px; border-bottom: 1px solid var(--border);
-      font-size: 0.8rem; color: var(--text-tertiary);
-    }
-    .orch-visual-body {
-      padding: 24px; font-family: var(--font-mono);
-      font-size: 0.82rem; line-height: 2; color: #e2e8f0;
-      white-space: pre-wrap;
-    }
+    /* ========== HERO (asymmetric) ========== */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding: calc(var(--nav-height) + 48px) 0 70px; position: relative; overflow: hidden; }
+    .hero-watermark { position: absolute; right: -8%; top: 50%; transform: translateY(-50%); width: min(760px, 60vw); filter: var(--logo-filter); opacity: 0.05; pointer-events: none; z-index: 0; }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: clamp(40px, 5vw, 72px); align-items: center; position: relative; z-index: 1; }
+    @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } .hero-watermark { opacity: 0.04; right: -30%; } }
+    .hero-left { max-width: 640px; }
+    .hero-mark { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+    .hero-mark img { height: 54px; width: 54px; filter: var(--logo-filter) drop-shadow(0 0 26px var(--accent-glow)); }
+    .hero-mark .wordmark { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .hero .eyebrow { margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(2.9rem, 6.6vw, 5.2rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.042em; margin-bottom: 26px; }
+    .hero-sub { font-size: clamp(1.05rem, 1.6vw, 1.24rem); color: var(--text-secondary); line-height: 1.7; margin-bottom: 36px; }
+    .hero-sub em { color: var(--text-primary); font-style: italic; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 34px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 0.8rem; color: var(--text-tertiary); }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 8px; }
+    .hero-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .hero-right { position: relative; }
+    .hero-terminal { position: relative; transform: perspective(1600px) rotateY(-6deg) rotateX(2deg); transition: transform 0.6s var(--ease); }
+    .hero-right:hover .hero-terminal { transform: perspective(1600px) rotateY(0deg) rotateX(0deg); }
+    @media (max-width: 940px) { .hero-terminal { transform: none; } .hero-right:hover .hero-terminal { transform: none; } }
 
-    /* ========== Feature Grid ========== */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-    .feature-card {
-      padding: 32px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: all var(--transition);
-    }
-    .feature-card:hover {
-      border-color: var(--accent);
-      background: var(--bg-card-hover);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-glow);
-    }
-    .feature-icon {
-      width: 48px; height: 48px; border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; margin-bottom: 16px;
-    }
-    .feature-icon.blue { background: var(--accent-subtle); color: var(--accent); }
-    .feature-icon.green { background: var(--green-subtle); color: var(--green); }
-    .feature-icon.purple { background: var(--purple-subtle); color: var(--purple); }
-    .feature-icon.orange { background: var(--orange-subtle); color: var(--orange); }
-    .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
-    .feature-card p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; }
+    /* ========== Runtime strip (partner-bar style) ========== */
+    .strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--panel-tint); padding: 30px 0; }
+    .strip-inner { display: flex; align-items: center; gap: clamp(20px, 4vw, 54px); flex-wrap: wrap; justify-content: space-between; }
+    .strip-label { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-tertiary); white-space: nowrap; }
+    .strip-agents { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 34px); flex-wrap: wrap; }
+    .strip-agent { display: inline-flex; align-items: center; gap: 9px; font-weight: 600; font-size: 0.98rem; color: var(--text-secondary); transition: color var(--transition); }
+    .strip-agent:hover { color: var(--text-primary); }
+    .strip-agent .d { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
+    .strip-agent .cli { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-tertiary); font-weight: 500; }
 
-    /* ========== Benefits Grid ========== */
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    @media (max-width: 900px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 600px) { .benefits-grid { grid-template-columns: 1fr; } }
-    .benefit-card {
-      padding: 28px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: all var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-    .benefit-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--gradient-accent);
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-    .benefit-card:hover {
-      border-color: var(--accent);
-      background: var(--bg-card-hover);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-glow);
-    }
-    .benefit-card:hover::before { opacity: 1; }
-    .benefit-number {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--accent-subtle); color: var(--accent);
-      font-size: 0.8rem; font-weight: 700;
-      margin-bottom: 14px;
-    }
-    .benefit-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
-    .benefit-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+    /* ========== Showcase rows (alternating asymmetric) ========== */
+    .showcase-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 88px); align-items: center; }
+    .showcase-row + .showcase-row { margin-top: clamp(84px, 10vw, 150px); }
+    .showcase-row.reverse .sc-text { order: 2; }
+    @media (max-width: 900px) { .showcase-row { grid-template-columns: 1fr; gap: 40px; } .showcase-row.reverse .sc-text { order: 0; } }
+    .sc-text .eyebrow { margin-bottom: 20px; }
+    .sc-text h2 { font-size: clamp(1.7rem, 3.6vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 20px; }
+    .sc-text > p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.75; margin-bottom: 26px; }
+    .sc-text strong { color: var(--text-primary); font-weight: 600; }
+    .ticks { list-style: none; margin: 0 0 30px; display: flex; flex-direction: column; gap: 13px; }
+    .ticks li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; font-size: 0.95rem; color: var(--text-secondary); }
+    .ticks li b { color: var(--text-primary); font-weight: 600; }
+    .ticks .ck { width: 22px; height: 22px; border-radius: 7px; background: var(--accent-subtle); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; margin-top: 1px; }
+    .sc-visual { position: relative; }
+    .sc-visual .frame { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg-elev); box-shadow: var(--shadow-lg); transition: transform var(--transition), box-shadow var(--transition); }
+    .sc-visual .frame:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
+    .sc-visual .frame img { width: 100%; display: block; }
+    .sc-visual .cap { padding: 14px 18px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-secondary); }
+    .sc-visual .frame.glow-top::before { content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px; background: var(--gradient-accent); opacity: 0.7; z-index: 2; }
+
+    /* ========== Pipeline (full-width horizontal) ========== */
+    .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; }
+    .flow-step { flex: 1 1 140px; min-width: 128px; padding: 24px 16px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all var(--transition); position: relative; }
+    .flow-step:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: translateY(-4px); z-index: 2; }
+    .flow-step .fs-idx { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 14px; }
+    .flow-step .fs-persona { font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
+    .flow-step .fs-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+    .flow-step .fs-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+    .flow-connector { display: flex; align-items: center; color: var(--text-tertiary); font-size: 1.1rem; padding: 0 4px; }
+    @media (max-width: 760px) { .flow { flex-direction: column; } .flow-connector { transform: rotate(90deg); padding: 6px 0; justify-content: center; } }
+
+    /* ========== Bento grid ========== */
+    .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; grid-auto-rows: 1fr; }
+    .tile { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; transition: all var(--transition); position: relative; overflow: hidden; min-height: 190px; display: flex; flex-direction: column; }
+    .tile::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(130deg, var(--accent), transparent 55%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity var(--transition); pointer-events: none; }
+    .tile:hover { background: var(--bg-elev-hover); transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .tile:hover::after { opacity: 0.7; }
+    .tile .ti { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 18px; border: 1px solid var(--border); background: var(--accent-subtle); }
+    .tile h3 { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .tile p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.62; }
+    .tile p strong { color: var(--text-primary); font-weight: 600; }
+    .tile.s2 { grid-column: span 2; } .tile.s3 { grid-column: span 3; }
+    .tile.feature { grid-column: span 3; grid-row: span 2; justify-content: flex-end; }
+    .tile.feature .ti { width: 56px; height: 56px; font-size: 1.6rem; }
+    .tile.feature h3 { font-size: 1.5rem; }
+    .tile.feature p { font-size: 0.98rem; max-width: 90%; }
+    @media (max-width: 980px) { .bento { grid-template-columns: repeat(4, 1fr); } .tile.s2, .tile.s3 { grid-column: span 2; } .tile.feature { grid-column: span 4; grid-row: auto; } }
+    @media (max-width: 620px) { .bento { grid-template-columns: 1fr; } .tile, .tile.s2, .tile.s3, .tile.feature { grid-column: span 1; grid-row: auto; min-height: 0; } }
+
+    /* ========== Stat band (full-bleed) ========== */
+    .band { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--panel-tint), transparent); position: relative; overflow: hidden; }
+    .band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 120% at 50% 0%, var(--accent-subtle), transparent 70%); pointer-events: none; }
+    .band-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: clamp(56px, 8vw, 90px) 0; position: relative; z-index: 1; }
+    @media (max-width: 760px) { .band-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 20px; } }
+    .stat { text-align: center; }
+    .stat-num { font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+    .stat-label { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+
+    /* ========== Why (editorial two-col list) ========== */
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 clamp(40px, 6vw, 80px); }
+    @media (max-width: 760px) { .why-grid { grid-template-columns: 1fr; } }
+    .why-item { display: grid; grid-template-columns: auto 1fr; gap: 20px; padding: 26px 0; border-top: 1px solid var(--border); }
+    .why-num { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--accent); padding-top: 3px; }
+    .why-item h3 { font-size: 1.06rem; font-weight: 600; margin-bottom: 7px; letter-spacing: -0.01em; }
+    .why-item p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.62; }
 
     /* ========== Architecture ========== */
-    .arch-diagram {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .arch-row {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
-    }
-    .arch-node {
-      padding: 16px 28px; border-radius: var(--radius-sm);
-      border: 1px solid var(--border); background: var(--bg-card);
-      text-align: center; min-width: 150px;
-      transition: all var(--transition);
-    }
-    .arch-node:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); }
-    .arch-node .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin-bottom: 4px; }
+    .arch-diagram { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 860px; }
+    .arch-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; }
+    .arch-node { padding: 16px 28px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-elev); text-align: center; min-width: 160px; transition: all var(--transition); }
+    .arch-node:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: translateY(-2px); }
+    .arch-node .label { font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 5px; }
     .arch-node .name { font-weight: 600; font-size: 0.95rem; }
     .arch-node.highlight { border-color: var(--accent); background: var(--accent-subtle); }
-    .arch-arrow {
-      text-align: center; font-size: 1.5rem; color: var(--text-tertiary);
-      line-height: 1;
-    }
+    .arch-arrow { text-align: center; font-size: 1.3rem; color: var(--text-tertiary); line-height: 1; }
+    .arch-wrap { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(40px, 6vw, 80px); align-items: center; }
+    @media (max-width: 900px) { .arch-wrap { grid-template-columns: 1fr; } }
 
-    /* ========== Screenshots ========== */
-    .screenshots-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-    }
-    @media (max-width: 768px) { .screenshots-grid { grid-template-columns: 1fr; } }
-    .screenshot-card {
-      border-radius: var(--radius); overflow: hidden;
-      border: 1px solid var(--screenshot-border);
-      box-shadow: var(--shadow-md);
-      transition: all var(--transition);
-    }
-    .screenshot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .screenshot-card.wide { grid-column: 1 / -1; }
-    .screenshot-card img { width: 100%; display: block; }
-    .screenshot-caption {
-      padding: 14px 18px; background: var(--bg-card);
-      border-top: 1px solid var(--border);
-      font-size: 0.85rem; font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    /* ========== CLI Reference ========== */
-    .cli-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .cli-card {
-      padding: 20px 24px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      transition: all var(--transition);
-      position: relative;
-    }
-    .cli-card:hover { border-color: var(--accent); }
-    .cli-cmd-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      margin-bottom: 6px;
-    }
-    .cli-cmd {
-      font-family: var(--font-mono); font-size: 0.88rem;
-      font-weight: 500; color: var(--accent);
-    }
+    /* ========== CLI ========== */
+    .cli-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .cli-card { padding: 20px 24px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all var(--transition); }
+    .cli-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .cli-cmd-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .cli-cmd { font-family: var(--font-mono); font-size: 0.88rem; font-weight: 500; color: var(--accent); }
     .cli-cmd-row .copy-btn { position: static; flex-shrink: 0; }
-    .cli-desc { font-size: 0.85rem; color: var(--text-secondary); }
+    .cli-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
 
+    /* ========== Steps (horizontal) ========== */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+    .step { padding: 30px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 11px; background: var(--gradient-accent); color: #fff; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; margin-bottom: 18px; box-shadow: 0 6px 20px -6px var(--accent-glow); }
+    .step h3 { font-size: 1.08rem; font-weight: 600; margin-bottom: 10px; }
+    .step p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px; }
+    .code-block-wrap { position: relative; }
+    .step code.block { display: block; padding: 15px 44px 15px 18px; background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: #dbe4f3; overflow-x: auto; white-space: pre; line-height: 1.7; }
 
-    /* ========== Getting Started ========== */
-    .steps {
-      display: flex; flex-direction: column;
-      gap: 20px; max-width: 700px; margin: 0 auto;
-    }
-    .step {
-      padding: 28px 32px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .step-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--gradient-accent); color: #fff;
-      font-size: 0.85rem; font-weight: 700;
-      margin-bottom: 16px;
-    }
-    .step h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; }
-    .code-block-wrap {
-      position: relative; margin-top: 12px;
-    }
-    .step code.block {
-      display: block; padding: 14px 44px 14px 18px;
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem; color: #e2e8f0;
-      overflow-x: auto; white-space: pre;
-    }
-    .copy-btn {
-      position: absolute; top: 8px; right: 8px;
-      background: none; border: none; cursor: pointer;
-      color: #64748b; padding: 4px; border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      transition: color 0.2s;
-    }
-    .copy-btn:hover { color: #e2e8f0; }
-    .copy-btn svg { width: 16px; height: 16px; }
-    .step p { font-size: 0.9rem; color: var(--text-secondary); }
+    /* ========== Docs ========== */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+    .doc-card { padding: 28px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--transition); }
+    .doc-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .doc-icon { font-size: 1.7rem; margin-bottom: 14px; }
+    .doc-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 7px; color: var(--text-primary); }
+    .doc-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
 
-    /* ========== Use Cases ========== */
-    .usecases-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .usecase {
-      padding: 28px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: all var(--transition);
-    }
-    .usecase:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .usecase h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
-    .usecase p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
-
-    /* ========== Docs Banner ========== */
-    .docs-banner {
-      padding: 80px 0;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-    }
-    .docs-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-    .doc-card {
-      padding: 28px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      text-align: center;
-      transition: all var(--transition);
-    }
-    .doc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .doc-icon { font-size: 2rem; margin-bottom: 12px; }
-    .doc-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
-    .doc-card p { font-size: 0.85rem; color: var(--text-secondary); }
-
-    /* ========== CTA ========== */
-    .cta-section {
-      padding: 100px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse 800px 400px at 50% 50%, var(--accent-glow), transparent);
-      pointer-events: none;
-    }
-    .cta-section h2 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700; letter-spacing: -0.02em;
-      margin-bottom: 16px; position: relative; z-index: 1;
-    }
-    .cta-section p {
-      font-size: 1.1rem; color: var(--text-secondary);
-      max-width: 500px; margin: 0 auto 32px;
-      position: relative; z-index: 1;
-    }
-    .cta-section .hero-ctas { position: relative; z-index: 1; }
+    /* ========== CTA (full-bleed) ========== */
+    .cta { border-top: 1px solid var(--border); text-align: center; padding: clamp(90px, 13vw, 170px) 0; position: relative; overflow: hidden; }
+    .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 90% at 50% 50%, var(--accent-subtle), transparent 65%); pointer-events: none; }
+    .cta-logo { height: 64px; width: auto; margin: 0 auto 30px; filter: var(--logo-filter) drop-shadow(0 0 30px var(--accent-glow)); position: relative; z-index: 1; }
+    .cta h2 { font-size: clamp(2.2rem, 5.4vw, 3.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 18px; position: relative; z-index: 1; }
+    .cta p { font-size: 1.14rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto 36px; position: relative; z-index: 1; }
+    .cta .hero-ctas { justify-content: center; margin-bottom: 0; position: relative; z-index: 1; }
 
     /* ========== Footer ========== */
-    .footer {
-      padding: 48px 0 32px;
-      border-top: 1px solid var(--border);
-      background: var(--bg-secondary);
-    }
-    .footer-inner {
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-    }
-    @media (max-width: 768px) {
-      .footer-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
-    }
-    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .footer-brand img { height: 24px; width: 24px; filter: var(--logo-filter); }
-    .footer-brand span { font-weight: 700; font-size: 1.1rem; }
-    .footer-about p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
-    .footer-col h4 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin-bottom: 12px; }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 8px; }
-    .footer-col a { font-size: 0.88rem; color: var(--text-secondary); }
-    .footer-col a:hover { color: var(--accent); }
-    .footer-bottom {
-      margin-top: 40px; padding-top: 24px;
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.8rem; color: var(--text-tertiary);
-      flex-wrap: wrap; gap: 12px;
-    }
+    .footer { padding: 64px 0 40px; border-top: 1px solid var(--border); background: var(--bg-deep); }
+    .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    .footer-brand { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+    .footer-brand img { height: 26px; width: 26px; filter: var(--logo-filter); }
+    .footer-brand span { font-weight: 700; font-size: 1.12rem; }
+    .footer-about p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; max-width: 320px; }
+    .footer-col h4 { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-tertiary); margin-bottom: 14px; }
+    .footer-col ul { list-style: none; } .footer-col li { margin-bottom: 9px; }
+    .footer-col a { font-size: 0.88rem; color: var(--text-secondary); } .footer-col a:hover { color: var(--accent); }
+    .footer-bottom { margin-top: 46px; padding-top: 26px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-tertiary); flex-wrap: wrap; gap: 12px; }
 
     /* ========== Animations ========== */
-    .fade-in {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+    .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* ========== Typing cursor ========== */
-    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-    .cursor { animation: blink 1s infinite; color: var(--accent); }
-
-    /* ========== Responsive ========== */
-    @media (max-width: 480px) {
-      .hero { padding: 120px 0 60px; }
-      .section { padding: 60px 0; }
-      .features-grid { grid-template-columns: 1fr; }
-      .screenshots-grid { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr; }
-      .footer-inner { grid-template-columns: 1fr; }
-    }
+    @media (prefers-reduced-motion: reduce) { .cursor, .fade-in { animation: none; transition: none; } #constellation { display: none; } .hero-terminal { transform: none !important; } }
   </style>
 </head>
 <body>
 
-<!-- ==================== NAVIGATION ==================== -->
-<nav class="nav">
+<!-- ==================== BACKDROP ==================== -->
+<div class="backdrop" aria-hidden="true">
+  <div class="grid"></div>
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="glow g3"></div>
+  <canvas id="constellation"></canvas>
+</div>
+
+<!-- ==================== NAV ==================== -->
+<nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-brand">
       <img src="assets/logo.png" alt="Armada">
@@ -651,18 +364,15 @@
     </a>
     <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
-      <li><a href="#orchestrator">AI Orchestrator</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#benefits">Benefits</a></li>
+      <li><a href="#orchestrate">Orchestrate</a></li>
+      <li><a href="#pipeline">Pipeline</a></li>
+      <li><a href="#capabilities">Capabilities</a></li>
       <li><a href="#architecture">Architecture</a></li>
-      <li><a href="#screenshots">Screenshots</a></li>
-      <li><a href="#getting-started">Get Started</a></li>
+      <li><a href="#start">Get Started</a></li>
       <li><a href="#docs">Docs</a></li>
     </ul>
     <div class="nav-actions">
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-        <span class="theme-icon">&#9790;</span>
-      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="theme-icon">&#9790;</span></button>
       <a href="https://github.com/jchristn/Armada" target="_blank" class="nav-github">
         <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub
@@ -673,459 +383,365 @@
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
-  <div class="container hero-content">
-    <div class="hero-badges">
-      <span class="hero-badge"><span class="dot"></span> Open Source &middot; MIT License</span>
-      <span class="hero-badge">Zero Dependencies</span>
-      <span class="hero-badge">Cross-Platform</span>
-      <span class="hero-badge">.NET 10</span>
-    </div>
-    <h1>One developer.<br><span class="gradient">An entire fleet.</span></h1>
-    <p class="hero-sub">
-      Armada orchestrates multiple AI coding agents working in parallel on your codebase.
-      Dispatch tasks, isolate work in git worktrees, and merge safely &mdash; all from a single command.
-    </p>
-    <div class="hero-ctas">
-      <a href="#getting-started" class="btn btn-primary">Get Started</a>
-      <a href="https://github.com/jchristn/Armada" target="_blank" class="btn btn-secondary">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        View on GitHub
-      </a>
-    </div>
-    <div class="hero-terminal" style="position:relative">
-      <div class="terminal-header">
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
+  <img src="assets/logo.png" alt="" class="hero-watermark">
+  <div class="container hero-grid">
+    <div class="hero-left">
+      <div class="hero-mark">
+        <img src="assets/logo.png" alt="Armada logo">
+        <span class="wordmark">Armada</span>
       </div>
-      <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard" style="position:absolute;top:44px;right:12px;z-index:2">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
-      <div class="terminal-body" data-copy='armada go "Harden the API: 1) Add rate limiting 2) Add input validation 3) Add request logging"'>
-        <span class="comment"># One command to dispatch a fleet of agents</span><br>
-        <span class="prompt">$</span> <span class="cmd">armada go</span> <span class="string">"Harden the API: 1) Add rate limiting 2) Add input validation 3) Add request logging"</span><br>
-        <br>
-        <span class="output">Admiral  </span> <span class="info">Initializing fleet...</span><br>
-        <span class="output">Admiral  </span> <span class="success">&#10003;</span> <span class="output">Vessel detected: task-api (~/projects/task-api)</span><br>
-        <span class="output">Admiral  </span> <span class="success">&#10003;</span> <span class="output">3 missions created, dispatching captains</span><br>
-        <span class="output">Captain-1</span> <span class="info">[msn_1]</span> <span class="output">Add rate-limiting middleware</span><br>
-        <span class="output">Captain-2</span> <span class="info">[msn_2]</span> <span class="output">Add input validation to POST /tasks</span><br>
-        <span class="output">Captain-3</span> <span class="info">[msn_3]</span> <span class="output">Add request logging with correlation IDs</span><br>
-        <br>
-        <span class="output">Admiral  </span> <span class="success">&#10003; Voyage complete: 3/3 missions succeeded (7m 22s)</span><br>
-        <span class="prompt">$</span> <span class="cursor">_</span>
+      <span class="eyebrow">Multi-agent AI orchestration</span>
+      <h1>One developer.<br><span class="gradient">An entire fleet.</span></h1>
+      <p class="hero-sub">
+        Orchestrate fleets of AI coding agents &mdash; Claude Code, Codex, Gemini, Cursor, Mux, OpenCode &mdash;
+        working in parallel across your repos. Isolated worktrees, quality-gate pipelines, safe merges. Your fleet's
+        work stays in queryable memory, so you can leave, come back, and just <em>ask</em> where things stand.
+      </p>
+      <div class="hero-ctas">
+        <a href="#start" class="btn btn-primary">Get Started</a>
+        <a href="https://github.com/jchristn/Armada" target="_blank" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="dot"></span> Open Source &middot; MIT</span>
+        <span>6 Agent Runtimes</span>
+        <span>Cross-Platform</span>
+        <span>Built on .NET</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-terminal panel" style="position:relative">
+        <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; armada &mdash; zsh</div>
+        <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard" style="top:46px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <div class="terminal-body" data-copy='armada go "Harden the API: 1) Add rate limiting 2) Add input validation 3) Add request logging"'>
+          <span class="comment"># One command dispatches a fleet</span><br>
+          <span class="prompt">$</span> <span class="cmd">armada go</span> <span class="string">"Harden the API: 1) rate limiting 2) input validation 3) request logging"</span><br>
+          <br>
+          <span class="output">Admiral  </span> <span class="info">Initializing fleet...</span><br>
+          <span class="output">Admiral  </span> <span class="success">&#10003;</span> <span class="output">Vessel detected: task-api</span><br>
+          <span class="output">Admiral  </span> <span class="success">&#10003;</span> <span class="output">3 missions created, dispatching captains</span><br>
+          <span class="output">Captain-1</span> <span class="info">[msn_1]</span> <span class="output">Add rate-limiting middleware</span><br>
+          <span class="output">Captain-2</span> <span class="info">[msn_2]</span> <span class="output">Add input validation to POST /tasks</span><br>
+          <span class="output">Captain-3</span> <span class="info">[msn_3]</span> <span class="output">Add request logging + correlation IDs</span><br>
+          <br>
+          <span class="output">Admiral  </span> <span class="success">&#10003; Voyage complete: 3/3 succeeded (7m 22s)</span><br>
+          <span class="prompt">$</span> <span class="cursor">_</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== AI ORCHESTRATOR (HIGHLIGHT) ==================== -->
-<section class="orchestrator" id="orchestrator">
+<!-- ==================== RUNTIME STRIP ==================== -->
+<section class="strip">
+  <div class="container strip-inner fade-in">
+    <span class="strip-label">Works with the agents you already have</span>
+    <div class="strip-agents">
+      <span class="strip-agent"><span class="d" style="color:var(--orange);background:var(--orange)"></span> Claude Code <span class="cli">claude</span></span>
+      <span class="strip-agent"><span class="d" style="color:var(--green);background:var(--green)"></span> Codex <span class="cli">codex</span></span>
+      <span class="strip-agent"><span class="d" style="color:var(--accent);background:var(--accent)"></span> Gemini <span class="cli">gemini</span></span>
+      <span class="strip-agent"><span class="d" style="color:var(--purple);background:var(--purple)"></span> Cursor <span class="cli">cursor</span></span>
+      <span class="strip-agent"><span class="d" style="color:var(--red);background:var(--red)"></span> Mux <span class="cli">mux</span></span>
+      <span class="strip-agent"><span class="d" style="color:var(--green);background:var(--green)"></span> OpenCode <span class="cli">opencode</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ORCHESTRATE (showcase rows) ==================== -->
+<section class="section" id="orchestrate">
   <div class="container">
-    <div class="orch-grid">
-      <div class="orch-content fade-in">
-        <span class="section-label">The Killer Feature</span>
+
+    <!-- Row 1: AI as orchestrator -->
+    <div class="showcase-row">
+      <div class="sc-text fade-in">
+        <span class="eyebrow">The Killer Feature</span>
         <h2>Your AI agent becomes <span class="gradient">the orchestrator</span></h2>
         <p>
-          Chat with your favorite AI assistant and have it command an entire fleet of agents under your fingertips.
-          Armada's MCP server exposes numerous tools that let any MCP-capable AI decompose work, dispatch parallel missions,
-          monitor progress, handle failures, and merge results &mdash; autonomously.
+          Chat with your favorite AI assistant and have it command an entire fleet. Armada's MCP server exposes tools
+          that let any MCP-capable AI decompose work, dispatch parallel missions, monitor progress, handle failures,
+          and merge results &mdash; autonomously.
         </p>
+        <ul class="ticks">
+          <li><span class="ck">&#10003;</span><span>Describe work in natural language; your AI plans and executes it through Armada.</span></li>
+          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b> &mdash; a built-in captain-backed chat that reasons about and acts on fleet state, with streaming replies and per-turn token metrics.</span></li>
+          <li><span class="ck">&#10003;</span><span>One <code>armada mcp install</code> configures Claude Code, Codex, Gemini, Cursor, and Mux.</span></li>
+        </ul>
+        <a href="#start" class="link-arrow">Set up AI orchestration <span class="ar">&rarr;</span></a>
+      </div>
+      <div class="sc-visual fade-in">
+        <div class="panel">
+          <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; AI Orchestrator Session</div>
+          <div class="terminal-body chat"><span class="comment">/* You chat naturally &mdash; your AI handles the rest */</span>
+
+<span style="color:#fbbf24">You:</span> <span style="color:#dbe4f3">"Harden the task API with validation,</span>
+     <span style="color:#dbe4f3">rate limiting, and request logging."</span>
+
+<span style="color:#a879ff">AI:</span>  <span style="color:#9aa7be">Creating a voyage with 3 missions</span>
+     <span style="color:#9aa7be">and dispatching in parallel...</span>
+
+     <span style="color:#616e88">&#x25B6; armada_voyage_create</span>
+     <span style="color:#616e88">&#x25B6; armada_voyage_dispatch</span>
+     <span style="color:#616e88">&#x25B6; armada_voyage_status ...</span>
+
+     <span style="color:#34d399">&#10003; 3/3 missions complete.</span>
+     <span style="color:#34d399">  Branches merged to main.</span>
+     <span style="color:#9aa7be">Ready for your review.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Single pane of glass -->
+    <div class="showcase-row reverse">
+      <div class="sc-text fade-in">
+        <span class="eyebrow">Single Pane of Glass</span>
+        <h2>Every agent, every repo &mdash; one live view</h2>
         <p>
-          You describe what you want in natural language. Your AI orchestrator figures out the plan and executes it
-          through Armada. One conversation, multiple agents, zero manual coordination.
+          A dashboard with live WebSocket updates ships embedded in the server. Watch captains, missions, voyages,
+          signals, and the merge queue across all your projects without juggling a dozen terminals.
         </p>
-        <div class="orch-agents">
-          <span class="orch-agent"><span style="color:var(--orange)">&#9670;</span> Claude Code</span>
-          <span class="orch-agent"><span style="color:var(--green)">&#9670;</span> Codex</span>
-          <span class="orch-agent"><span style="color:var(--accent)">&#9670;</span> Gemini</span>
-          <span class="orch-agent"><span style="color:var(--purple)">&#9670;</span> Cursor</span>
-        </div>
-        <a href="#getting-started" class="btn btn-primary">Set Up AI Orchestration</a>
+        <ul class="ticks">
+          <li><span class="ck">&#10003;</span><span>Full mission history, logs, diffs, and signals stay in <b>queryable memory</b> &mdash; pick up exactly where you left off.</span></li>
+          <li><span class="ck">&#10003;</span><span>A <b>Needs-You inbox</b> surfaces everything awaiting a human decision, most-urgent first.</span></li>
+          <li><span class="ck">&#10003;</span><span>Optional standalone React dashboard for production deployments.</span></li>
+        </ul>
+        <a href="#capabilities" class="link-arrow">Explore capabilities <span class="ar">&rarr;</span></a>
       </div>
-      <div class="orch-visual fade-in">
-        <div class="orch-visual-header">
-          <span class="terminal-dot" style="width:10px;height:10px"></span>
-          <span class="terminal-dot" style="width:10px;height:10px"></span>
-          <span class="terminal-dot" style="width:10px;height:10px"></span>
-          &nbsp; AI Orchestrator Session
+      <div class="sc-visual fade-in">
+        <div class="frame glow-top">
+          <img src="assets/screenshot-1.png" alt="Armada web dashboard - system status" loading="lazy">
+          <div class="cap">Dashboard &mdash; captains, missions, voyages, and real-time signals in one place</div>
         </div>
-        <div class="orch-visual-body">
-<span class="comment">/* You chat naturally &mdash; your AI handles the rest */</span>
+      </div>
+    </div>
 
-<span style="color:#f59e0b">You:</span> <span style="color:#e2e8f0">"Harden the task API with</span>
-      <span style="color:#e2e8f0">validation, rate limiting,</span>
-      <span style="color:#e2e8f0">and request logging."</span>
-
-<span style="color:#8b5cf6">AI:</span>  <span style="color:#94a3b8">I'll create a voyage with 3 missions</span>
-      <span style="color:#94a3b8">and dispatch them in parallel...</span>
-
-      <span style="color:#64748b">&#x25B6; armada_voyage_create</span>
-      <span style="color:#64748b">&#x25B6; armada_voyage_dispatch</span>
-      <span style="color:#64748b">&#x25B6; armada_voyage_status ...</span>
-
-      <span style="color:#10b981">&#10003; All 3 missions complete.</span>
-      <span style="color:#10b981">  Branches merged to main.</span>
-      <span style="color:#94a3b8">Ready for your review.</span>
+    <!-- Row 3: In-app review & delivery -->
+    <div class="showcase-row">
+      <div class="sc-text fade-in">
+        <span class="eyebrow">Review &amp; Deliver</span>
+        <h2>Inspect the diff. Ship to production.</h2>
+        <p>
+          Review a captain's work as a line-colored unified diff, run shell commands in an in-browser terminal, and
+          take the change all the way to production &mdash; without leaving Armada.
+        </p>
+        <ul class="ticks">
+          <li><span class="ck">&#10003;</span><span>In-browser workspace: file tree, terminal, and full diff review.</span></li>
+          <li><span class="ck">&#10003;</span><span>Environments &amp; deployments with <b>approvals, verification, and rollback</b>; releases with derived notes.</span></li>
+          <li><span class="ck">&#10003;</span><span>Backlog and objectives with acceptance criteria feed straight into dispatch.</span></li>
+        </ul>
+        <a href="#pipeline" class="link-arrow">See the pipeline <span class="ar">&rarr;</span></a>
+      </div>
+      <div class="sc-visual fade-in">
+        <div class="frame glow-top">
+          <img src="assets/screenshot-3.png" alt="Armada mission detail with code diff" loading="lazy">
+          <div class="cap">Mission Detail &mdash; full context including diff, status, and timing</div>
         </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== PIPELINE (full-width) ==================== -->
+<section class="section divide" id="pipeline">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Quality Gates</span>
+      <h2>From prompt to production, with gates that run themselves</h2>
+      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>FullPipeline</code>), and every prompt is a template you can edit.</p>
+    </div>
+    <div class="flow fade-in">
+      <div class="flow-step">
+        <div class="fs-idx">01</div><div class="fs-persona">Architect</div><div class="fs-name">Plan</div>
+        <div class="fs-desc">Decompose the goal into missions with file lists and ordering.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">02</div><div class="fs-persona">Worker</div><div class="fs-name">Implement</div>
+        <div class="fs-desc">Write the code in an isolated worktree on its own branch.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">03</div><div class="fs-persona">TestEngineer</div><div class="fs-name">Test</div>
+        <div class="fs-desc">Take the diff and write tests that prove it works.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">04</div><div class="fs-persona">Judge</div><div class="fs-name">Review</div>
+        <div class="fs-desc">Examine the diff against the mission &mdash; PASS or FAIL.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">05</div><div class="fs-persona">Merge Queue</div><div class="fs-name">Land</div>
+        <div class="fs-desc">Batch-test and merge safely, with auto-push and auto-PR options.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">06</div><div class="fs-persona">Delivery</div><div class="fs-name">Deploy</div>
+        <div class="fs-desc">Roll out with approvals, verification, and rollback.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FEATURES ==================== -->
-<section class="section" id="features">
+<!-- ==================== STAT BAND ==================== -->
+<section class="band">
+  <div class="container band-grid fade-in">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Agent runtimes, one interface</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Databases: SQLite &middot; Postgres &middot; MySQL &middot; SQL Server</div></div>
+    <div class="stat"><div class="stat-num">&infin;</div><div class="stat-label">Parallel missions across repos</div></div>
+    <div class="stat"><div class="stat-num">MIT</div><div class="stat-label">Open source, zero lock-in</div></div>
+  </div>
+</section>
+
+<!-- ==================== CAPABILITIES (bento) ==================== -->
+<section class="section" id="capabilities">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Capabilities</span>
-      <h2>Everything you need to orchestrate at scale</h2>
-      <p>Multi-agent coordination, built from the ground up, with AI, for AI.</p>
+    <div class="section-head fade-in">
+      <span class="eyebrow">Capabilities</span>
+      <h2>Built from the ground up, with AI, for AI</h2>
+      <p>Everything you need to orchestrate multi-agent work at scale &mdash; from isolation and reliability to observability and delivery.</p>
     </div>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-icon blue">&#9881;</div>
-        <h3>Zero-Config Startup</h3>
-        <p>Run <code>armada go</code> and everything auto-initializes: runtime detection, repo registration, captain provisioning, worktree creation. No setup files or configuration needed.</p>
+    <div class="bento fade-in">
+      <div class="tile feature">
+        <div class="ti">&#9878;</div>
+        <h3>Git worktree isolation</h3>
+        <p>Every agent works in its own isolated git worktree on its own branch. Broad-scope conflict detection prevents concurrent mutations &mdash; agents can't step on each other, and your main branch stays clean until you merge. Zero-config: <code>armada go</code> detects the runtime, registers the repo, and provisions worktrees automatically.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon green">&#9878;</div>
-        <h3>Git Worktree Isolation</h3>
-        <p>Every agent works in its own isolated git worktree. No interference between parallel agents. Broad-scope conflict detection prevents concurrent mutations to the same files.</p>
+      <div class="tile s3">
+        <div class="ti">&#9879;</div>
+        <h3>Merge queue</h3>
+        <p>A background driver lands entries with hard subprocess timeouts and multi-instance-safe processing via a durable coordination lease. Optional auto-push, auto-PR, and auto-merge.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon purple">&#9851;</div>
-        <h3>Auto-Recovery</h3>
-        <p>Crashed agents are automatically detected, repaired, and relaunched with configurable retry limits. Stall detection catches agents that stop making progress.</p>
+      <div class="tile s3">
+        <div class="ti">&#9851;</div>
+        <h3>Self-healing reliability</h3>
+        <p>Stall detection catches live-but-silent agents, crashed captains are repaired and relaunched, PID-identity verification prevents stuck "Working" states, and non-destructive dock repair unsticks jams.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon orange">&#9879;</div>
-        <h3>Merge Queue</h3>
-        <p>Bors-style merge queue with batch testing and binary bisection on failure. Safely merge parallel work with confidence. Optional auto-push, auto-PR, and auto-merge.</p>
+      <div class="tile s2">
+        <div class="ti">&#9741;</div>
+        <h3>MCP + REST + WebSocket</h3>
+        <p>A standards-compliant MCP server, a full CRUD REST API on port 7890 with built-in OpenAPI, and live event streaming at <code>/ws</code>.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon blue">&#8644;</div>
-        <h3>REST API</h3>
-        <p>Full CRUD API on port 7890 for programmatic control. Create fleets, dispatch voyages, monitor missions, query events &mdash; integrate Armada into any workflow.</p>
+      <div class="tile s2">
+        <div class="ti">&#128451;</div>
+        <h3>Your database, your choice</h3>
+        <p>Zero-install embedded SQLite by default, scaling to <strong>PostgreSQL, MySQL, and SQL Server</strong> &mdash; the same schema, migrated across all four.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon green">&#9889;</div>
-        <h3>Real-Time WebSocket</h3>
-        <p>Live event streaming on port 7892. Subscribe to mission updates, captain status changes, and system snapshots for dashboards and reactive workflows.</p>
+      <div class="tile s2">
+        <div class="ti">&#128202;</div>
+        <h3>Built-in observability</h3>
+        <p>Opt-in OpenTelemetry export to OTLP, Prometheus, and Loki. The Docker stack ships Grafana with a pre-provisioned "Armada Reliability" dashboard.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon purple">&#9741;</div>
-        <h3>Numerous MCP Tools</h3>
-        <p>Standards-compliant Model Context Protocol server with numerous tools covering the full surface area. Any MCP-capable AI can orchestrate Armada programmatically.</p>
+      <div class="tile s3">
+        <div class="ti">&#9781;</div>
+        <h3>Backlog, objectives &amp; planning</h3>
+        <p>First-class objectives and a ranked backlog with acceptance criteria and linked evidence. Plan interactively with a captain, then turn a reply into a dispatch with one click.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon orange">&#9635;</div>
-        <h3>Desktop Application</h3>
-        <p>Cross-platform Avalonia desktop app with real-time dashboard, mission viewer, log tail, diff viewer, dispatch interface, and system diagnostics.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon green">&#9745;</div>
-        <h3>Web Dashboard</h3>
-        <p>Built-in HTML5 dashboard with live WebSocket updates. Monitor captains, missions, voyages, signals, and merge queue from your browser. Zero setup.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon purple">&#9000;</div>
-        <h3>Agent Control</h3>
-        <p>Control Armada directly using your favorite agents. Use Claude Code, Codex, Gemini, Cursor, or any MCP-compatible agent to orchestrate fleets, dispatch missions, and monitor progress from your existing workflow.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon orange">&#9992;</div>
-        <h3>Remote Control</h3>
-        <p>Dispatch and monitor missions from anywhere using scheduled remote agents, webhooks, or the REST API. Kick off builds from your phone, review progress on the go, and let Armada keep working while you're away.</p>
+      <div class="tile s3">
+        <div class="ti">&#9992;</div>
+        <h3>Remote &amp; persistent memory</h3>
+        <p>Dispatch and monitor from anywhere via the REST API and a remote-ops proxy. Missions, logs, diffs, and status history stay queryable &mdash; leave, come back, and continue.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== BENEFITS ==================== -->
-<section class="section section-alt" id="benefits">
+<!-- ==================== WHY (editorial) ==================== -->
+<section class="section divide" id="why">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Why Armada</span>
+    <div class="section-head fade-in">
+      <span class="eyebrow">Why Armada</span>
       <h2>Built for developers who ship faster</h2>
-      <p>Tangible advantages that transform how you work with AI coding agents.</p>
+      <p>Tangible advantages that change how you work with AI coding agents.</p>
     </div>
-    <div class="benefits-grid">
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">1</div>
-        <h3>Single Pane of Glass</h3>
-        <p>Monitor and manage all AI agent work across every project from one unified dashboard, eliminating the need to juggle multiple terminals and windows.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">2</div>
-        <h3>Reduced Context-Switching</h3>
-        <p>Full mission history, logs, diffs, and signals are preserved, so you can pick up exactly where you left off without losing your train of thought.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">3</div>
-        <h3>Scale Across More Projects</h3>
-        <p>Dispatch parallel missions across multiple repositories simultaneously, letting you take on more work than a single developer normally could.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">4</div>
-        <h3>Project Management Meets Conversational AI</h3>
-        <p>Integrate task tracking, prioritization, and workflow orchestration directly into AI coding agents like Claude Code, bridging the gap between planning and execution.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">5</div>
-        <h3>Safe Isolated Worktrees</h3>
-        <p>Every agent operates in its own git worktree, so parallel work never collides and your main branch stays clean until you're ready to merge.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">6</div>
-        <h3>Automated Merge Queues</h3>
-        <p>Completed missions are queued for merge automatically, reducing manual branch management and keeping your integration pipeline flowing.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">7</div>
-        <h3>Auditable Event Trails</h3>
-        <p>Every mission dispatch, status transition, completion, and failure is recorded in a structured event log you can query at any time.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">8</div>
-        <h3>Reproducible Workflows</h3>
-        <p>Voyages capture a batch of missions as a reusable unit; retry a failed voyage or re-dispatch it against a new branch with a single command.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">9</div>
-        <h3>Team Visibility</h3>
-        <p>Real-time WebSocket updates, a REST API, and desktop notifications keep everyone informed of agent progress without polling or asking around.</p>
-      </div>
-      <div class="benefit-card fade-in">
-        <div class="benefit-number">10</div>
-        <h3>Productivity Anywhere</h3>
-        <p>Dispatch missions remotely, check progress from any device, and let agents keep shipping while you step away. Armada works around the clock so you don't have to.</p>
-      </div>
+    <div class="why-grid fade-in">
+      <div class="why-item"><div class="why-num">01</div><div><h3>Single pane of glass</h3><p>Monitor and manage all AI agent work across every project from one unified dashboard.</p></div></div>
+      <div class="why-item"><div class="why-num">02</div><div><h3>Reduced context-switching</h3><p>History, logs, diffs, and signals are preserved, so you pick up exactly where you left off.</p></div></div>
+      <div class="why-item"><div class="why-num">03</div><div><h3>Scale across more projects</h3><p>Dispatch parallel missions across multiple repositories at once &mdash; more than one developer normally could.</p></div></div>
+      <div class="why-item"><div class="why-num">04</div><div><h3>Planning meets conversational AI</h3><p>Task tracking and orchestration sit directly inside agents like Claude Code, bridging planning and execution.</p></div></div>
+      <div class="why-item"><div class="why-num">05</div><div><h3>Safe isolated worktrees</h3><p>Every agent works in its own git worktree, so parallel work never collides.</p></div></div>
+      <div class="why-item"><div class="why-num">06</div><div><h3>Automated merge queues</h3><p>Completed missions queue for merge automatically, keeping your integration pipeline flowing.</p></div></div>
+      <div class="why-item"><div class="why-num">07</div><div><h3>Auditable event trails</h3><p>Every dispatch, transition, completion, and failure is recorded in a structured, queryable log.</p></div></div>
+      <div class="why-item"><div class="why-num">08</div><div><h3>Reproducible workflows</h3><p>Voyages capture a batch of missions as a reusable unit; retry or re-dispatch with a single command.</p></div></div>
+      <div class="why-item"><div class="why-num">09</div><div><h3>Team visibility</h3><p>Real-time WebSocket updates, a REST API, and notifications keep everyone informed without polling.</p></div></div>
+      <div class="why-item"><div class="why-num">10</div><div><h3>Productivity anywhere</h3><p>Dispatch remotely, check progress from any device, and let agents keep shipping while you step away.</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- ==================== ARCHITECTURE ==================== -->
-<section class="section section-alt" id="architecture">
+<section class="section divide" id="architecture">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Architecture</span>
-      <h2>Built for reliability, not complexity</h2>
-      <p>Zero external dependencies. Pure .NET with embedded SQLite. Runs anywhere .NET 10 runs.</p>
-    </div>
-    <div class="arch-diagram fade-in">
-      <div class="arch-row">
-        <div class="arch-node highlight">
-          <div class="label">You</div>
-          <div class="name">CLI / AI Chat / API</div>
-        </div>
+    <div class="arch-wrap">
+      <div class="fade-in">
+        <span class="eyebrow" style="margin-bottom:22px">Architecture</span>
+        <h2 style="font-size:clamp(1.8rem,3.8vw,2.7rem);font-weight:800;letter-spacing:-0.03em;line-height:1.08;margin-bottom:20px">Built for reliability, not complexity</h2>
+        <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.75;margin-bottom:24px">
+          Pure .NET, cross-platform, with zero-install embedded SQLite by default &mdash; and connection-pooled
+          PostgreSQL, MySQL, or SQL Server when you're ready to scale. A single Admiral coordinates everything;
+          every captain works in its own isolated worktree.
+        </p>
+        <a href="#start" class="link-arrow">Run it locally <span class="ar">&rarr;</span></a>
       </div>
-      <div class="arch-arrow">&#8595;</div>
-      <div class="arch-row">
-        <div class="arch-node highlight">
-          <div class="label">Coordinator</div>
-          <div class="name">Admiral</div>
+      <div class="arch-diagram fade-in">
+        <div class="arch-row"><div class="arch-node highlight"><div class="label">You</div><div class="name">CLI / AI Chat / API</div></div></div>
+        <div class="arch-arrow">&#8595;</div>
+        <div class="arch-row"><div class="arch-node highlight"><div class="label">Coordinator</div><div class="name">Admiral</div></div></div>
+        <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="label">REST + WebSocket</div><div class="name">Port 7890</div></div>
+          <div class="arch-node"><div class="label">MCP Server</div><div class="name">Port 7891</div></div>
+          <div class="arch-node"><div class="label">Dashboard</div><div class="name">/dashboard</div></div>
         </div>
-      </div>
-      <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
-      <div class="arch-row">
-        <div class="arch-node">
-          <div class="label">REST API</div>
-          <div class="name">Port 7890</div>
+        <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="label">Agent</div><div class="name">Captain 1</div></div>
+          <div class="arch-node"><div class="label">Agent</div><div class="name">Captain 2</div></div>
+          <div class="arch-node"><div class="label">Agent</div><div class="name">Captain 3</div></div>
         </div>
-        <div class="arch-node">
-          <div class="label">MCP Server</div>
-          <div class="name">Port 7891</div>
+        <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="label">Isolated</div><div class="name">Worktree 1</div></div>
+          <div class="arch-node"><div class="label">Isolated</div><div class="name">Worktree 2</div></div>
+          <div class="arch-node"><div class="label">Isolated</div><div class="name">Worktree 3</div></div>
         </div>
-        <div class="arch-node">
-          <div class="label">WebSocket</div>
-          <div class="name">Port 7892</div>
-        </div>
-      </div>
-      <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
-      <div class="arch-row">
-        <div class="arch-node">
-          <div class="label">Agent</div>
-          <div class="name">Captain 1</div>
-        </div>
-        <div class="arch-node">
-          <div class="label">Agent</div>
-          <div class="name">Captain 2</div>
-        </div>
-        <div class="arch-node">
-          <div class="label">Agent</div>
-          <div class="name">Captain 3</div>
-        </div>
-      </div>
-      <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
-      <div class="arch-row">
-        <div class="arch-node">
-          <div class="label">Isolated</div>
-          <div class="name">Worktree 1</div>
-        </div>
-        <div class="arch-node">
-          <div class="label">Isolated</div>
-          <div class="name">Worktree 2</div>
-        </div>
-        <div class="arch-node">
-          <div class="label">Isolated</div>
-          <div class="name">Worktree 3</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ==================== SCREENSHOTS ==================== -->
-<section class="section" id="screenshots">
-  <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">See It In Action</span>
-      <h2>Web dashboard &amp; desktop application</h2>
-      <p>Monitor your fleet in real time through the built-in web dashboard or cross-platform desktop app.</p>
-    </div>
-    <div class="screenshots-grid fade-in">
-      <div class="screenshot-card wide">
-        <img src="assets/screenshot-1.png" alt="Armada Web Dashboard - System Status" loading="lazy">
-        <div class="screenshot-caption">Web Dashboard &mdash; System status with captains, missions, and real-time signals</div>
-      </div>
-      <div class="screenshot-card">
-        <img src="assets/screenshot-2.png" alt="Armada Voyage Detail" loading="lazy">
-        <div class="screenshot-caption">Voyage Detail &mdash; Track batched missions with progress and branch info</div>
-      </div>
-      <div class="screenshot-card">
-        <img src="assets/screenshot-3.png" alt="Armada Mission Detail" loading="lazy">
-        <div class="screenshot-caption">Mission Detail &mdash; Full context including diff, status, and timing</div>
-      </div>
-      <div class="screenshot-card">
-        <img src="assets/screenshot-4.png" alt="Armada Desktop Application" loading="lazy">
-        <div class="screenshot-caption">Desktop App &mdash; Cross-platform Avalonia GUI with real-time updates</div>
-      </div>
-      <div class="screenshot-card">
-        <img src="assets/screenshot-5.png" alt="Armada Desktop - Mission Log and Diff" loading="lazy">
-        <div class="screenshot-caption">Desktop App &mdash; Mission list with log viewer and code diff</div>
-      </div>
-      <div class="screenshot-card">
-        <img src="assets/screenshot-6.png" alt="Armada CLI Agent Control" loading="lazy">
-        <div class="screenshot-caption">Agent Control &mdash; Control Armada directly using your favorite agents</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== USE CASES ==================== -->
-<section class="section section-alt" id="usecases">
+<!-- ==================== CLI ==================== -->
+<section class="section divide" id="cli">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Use Cases</span>
-      <h2>Scale how you work</h2>
-      <p>From solo developers to teams, Armada multiplies your throughput.</p>
-    </div>
-    <div class="usecases-grid fade-in">
-      <div class="usecase">
-        <h3>Parallel Feature Development</h3>
-        <p>Decompose a feature into non-overlapping tasks and dispatch agents to work on all of them simultaneously. Merge when done.</p>
-      </div>
-      <div class="usecase">
-        <h3>Codebase-Wide Refactoring</h3>
-        <p>Fan out mechanical changes across your codebase &mdash; rename patterns, update imports, migrate APIs &mdash; all in parallel.</p>
-      </div>
-      <div class="usecase">
-        <h3>Bug Triage at Scale</h3>
-        <p>Dispatch investigation and fixes across multiple reported issues simultaneously. Each agent works in isolation with full context.</p>
-      </div>
-      <div class="usecase">
-        <h3>Multi-Repo Coordination</h3>
-        <p>Register multiple repositories as vessels in a fleet. Dispatch related work across repos in a single voyage.</p>
-      </div>
-      <div class="usecase">
-        <h3>Explore Multiple Approaches</h3>
-        <p>Prototype different solutions to the same problem in parallel worktrees. Compare results and pick the winner.</p>
-      </div>
-      <div class="usecase">
-        <h3>CI/CD Prep &amp; Hardening</h3>
-        <p>Batch security hardening, test coverage improvements, and documentation updates as parallel missions before a release.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== CLI REFERENCE ==================== -->
-<section class="section" id="cli">
-  <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Command Line</span>
+    <div class="section-head fade-in">
+      <span class="eyebrow">Command Line</span>
       <h2>Powerful CLI, intuitive commands</h2>
-      <p>Everything you need from your terminal. Rich output powered by Spectre.Console.</p>
+      <p>Everything you need from your terminal &mdash; rich output powered by Spectre.Console.</p>
     </div>
     <div class="cli-grid fade-in">
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy='armada go "&lt;prompt&gt;"'>armada go "&lt;prompt&gt;"</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Auto-init, detect runtime, spawn captain, dispatch task. The one command to rule them all.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada status">armada status</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Dashboard scoped to current repo. Add <code>--all</code> for global view across all vessels.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada watch">armada watch</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Live auto-refreshing dashboard with desktop notifications on mission completion or failure.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada voyage create">armada voyage create</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Create a batch of related missions with description, vessel targeting, and priority control.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada log &lt;captain&gt; -f">armada log &lt;captain&gt; -f</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Tail a specific agent's output in real time. Like <code>tail -f</code> for your AI agents.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Auto-install MCP server + custom orchestrator agent. Enable AI-as-orchestrator in one command.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada doctor">armada doctor</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">System health check. Validates runtimes, connectivity, git state, and configuration.</div>
-      </div>
-      <div class="cli-card">
-        <div class="cli-cmd-row">
-          <div class="cli-cmd" data-copy="armada config init">armada config init</div>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        </div>
-        <div class="cli-desc">Interactive setup wizard for all settings. MaxCaptains, auto-push, notifications, and more.</div>
-      </div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy='armada go "&lt;prompt&gt;"'>armada go "&lt;prompt&gt;"</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-init, detect runtime, spawn captain, dispatch task. The one command to rule them all.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada status">armada status</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Dashboard scoped to current repo. Add <code>--all</code> for a global view across vessels.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada watch">armada watch</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Live auto-refreshing dashboard with desktop notifications on completion or failure.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy='armada ask "&lt;question&gt;"'>armada ask "&lt;question&gt;"</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Ask a captain-backed assistant about fleet state &mdash; or tell it what to do.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada inbox --critical">armada inbox --critical</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Everything that needs a human: reviews, failed landings and merges, pending approvals.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada log &lt;captain&gt; -f">armada log &lt;captain&gt; -f</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Tail a specific agent's output in real time. Like <code>tail -f</code> for your AI agents.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-install and configure the MCP server for Claude Code, Codex, Gemini, Cursor, and Mux.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada doctor">armada doctor</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">System health check. Validates runtimes, connectivity, git state, and configuration.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ==================== GETTING STARTED ==================== -->
-<section class="section section-alt" id="getting-started">
+<!-- ==================== GET STARTED ==================== -->
+<section class="section divide" id="start">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Quick Start</span>
+    <div class="section-head fade-in">
+      <span class="eyebrow">Quick Start</span>
       <h2>Up and running in minutes</h2>
-      <p>Just .NET 10+ SDK and an AI coding agent. That's all you need.</p>
+      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes.</p>
     </div>
     <div class="steps fade-in">
       <div class="step">
@@ -1136,33 +752,27 @@
           <code class="block" data-copy="git clone https://github.com/jchristn/armada&#10;cd armada/src&#10;dotnet tool install -g Armada.Helm">git clone https://github.com/jchristn/armada
 cd armada/src
 dotnet tool install -g Armada.Helm</code>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
+          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3>Dispatch Your First Task</h3>
+        <h3>Dispatch your first task</h3>
         <p>Navigate to any git repo and go:</p>
         <div class="code-block-wrap">
           <code class="block" data-copy='cd ~/projects/my-api&#10;armada go "Add input validation to the signup form"'>cd ~/projects/my-api
-armada go "Add input validation to the signup form"</code>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
+armada go "Add input validation..."</code>
+          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h3>Enable AI Orchestration</h3>
+        <h3>Enable AI orchestration</h3>
         <p>Let your AI assistant control the fleet:</p>
         <div class="code-block-wrap">
           <code class="block" data-copy="armada mcp install&#10;claude --agent armada">armada mcp install
 claude --agent armada</code>
-          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
+          <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
     </div>
@@ -1170,50 +780,31 @@ claude --agent armada</code>
 </section>
 
 <!-- ==================== DOCS ==================== -->
-<section class="docs-banner" id="docs">
+<section class="section divide" id="docs">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-label">Documentation</span>
+    <div class="section-head fade-in">
+      <span class="eyebrow">Documentation</span>
       <h2>Extensively documented</h2>
-      <p>Comprehensive guides, API references, and orchestrator setup instructions for every supported runtime.</p>
+      <p>Guides, API references, and orchestrator setup instructions for every supported runtime.</p>
     </div>
     <div class="docs-grid fade-in">
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/REST_API.md" target="_blank" class="doc-card">
-        <div class="doc-icon">&#128209;</div>
-        <h3>REST API Reference</h3>
-        <p>Full CRUD endpoints, authentication, pagination, and filtering.</p>
-      </a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/MCP_API.md" target="_blank" class="doc-card">
-        <div class="doc-icon">&#9881;</div>
-        <h3>MCP API Reference</h3>
-        <p>All MCP tools with parameters, examples, and usage patterns.</p>
-      </a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/WEBSOCKET_API.md" target="_blank" class="doc-card">
-        <div class="doc-icon">&#9889;</div>
-        <h3>WebSocket API</h3>
-        <p>Real-time event streaming, subscriptions, and commands.</p>
-      </a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card">
-        <div class="doc-icon">&#129302;</div>
-        <h3>Orchestrator Guides</h3>
-        <p>Setup instructions for Claude Code, Codex, Gemini, and Cursor.</p>
-      </a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/Armada.postman_collection.json" target="_blank" class="doc-card">
-        <div class="doc-icon">&#128640;</div>
-        <h3>Postman Collection</h3>
-        <p>Ready-to-import collection for testing the full REST API surface.</p>
-      </a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/REST_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#128209;</div><h3>REST API Reference</h3><p>Full CRUD endpoints, authentication, pagination, and filtering.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/MCP_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9881;</div><h3>MCP API Reference</h3><p>All MCP tools with parameters, examples, and usage patterns.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/WEBSOCKET_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9889;</div><h3>WebSocket API</h3><p>Real-time event streaming, subscriptions, and commands.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#129302;</div><h3>Orchestrator Guides</h3><p>Setup for Claude Code, Codex, Gemini, and Cursor.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128640;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
     </div>
   </div>
 </section>
 
 <!-- ==================== CTA ==================== -->
-<section class="cta-section">
+<section class="cta">
   <div class="container">
+    <img src="assets/logo.png" alt="Armada logo" class="cta-logo">
     <h2>Ready to scale yourself?</h2>
     <p>Install Armada, run <code>armada go</code>, and let your fleet handle the rest.</p>
     <div class="hero-ctas">
-      <a href="#getting-started" class="btn btn-primary">Get Started</a>
+      <a href="#start" class="btn btn-primary">Get Started</a>
       <a href="https://github.com/jchristn/Armada" target="_blank" class="btn btn-secondary">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         Star on GitHub
@@ -1227,20 +818,17 @@ claude --agent armada</code>
   <div class="container">
     <div class="footer-inner">
       <div class="footer-about">
-        <div class="footer-brand">
-          <img src="assets/logo.png" alt="Armada">
-          <span>Armada</span>
-        </div>
-        <p>Multi-agent AI orchestration for developers who want to scale. Open source under the MIT license. Built with .NET, zero external dependencies.</p>
+        <div class="footer-brand"><img src="assets/logo.png" alt="Armada"><span>Armada</span></div>
+        <p>Multi-agent AI orchestration for developers who want to scale. Open source under the MIT license. Built with .NET, zero-install by default.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
         <ul>
-          <li><a href="#orchestrator">AI Orchestrator</a></li>
-          <li><a href="#features">Features</a></li>
+          <li><a href="#orchestrate">Orchestrate</a></li>
+          <li><a href="#pipeline">Pipeline</a></li>
+          <li><a href="#capabilities">Capabilities</a></li>
           <li><a href="#architecture">Architecture</a></li>
-          <li><a href="#screenshots">Screenshots</a></li>
-          <li><a href="#getting-started">Get Started</a></li>
+          <li><a href="#start">Get Started</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1265,92 +853,77 @@ claude --agent armada</code>
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 Armada &middot; MIT License</span>
-      <span>Built with .NET &middot; Zero external dependencies</span>
+      <span>Built with .NET &middot; SQLite &bull; PostgreSQL &bull; MySQL &bull; SQL Server</span>
     </div>
   </div>
 </footer>
 
 <!-- ==================== SCRIPTS ==================== -->
 <script>
-  // Theme toggle
   function toggleTheme() {
     const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     html.setAttribute('data-theme', next);
     localStorage.setItem('armada-theme', next);
     document.querySelector('.theme-icon').innerHTML = next === 'dark' ? '&#9790;' : '&#9728;';
   }
-
-  // Restore theme
   (function() {
     const saved = localStorage.getItem('armada-theme');
-    if (saved) {
-      document.documentElement.setAttribute('data-theme', saved);
-      if (saved === 'light') {
-        document.querySelector('.theme-icon').innerHTML = '&#9728;';
-      }
-    }
+    if (saved) { document.documentElement.setAttribute('data-theme', saved); if (saved === 'light') document.querySelector('.theme-icon').innerHTML = '&#9728;'; }
   })();
 
-  // Scroll-triggered fade-in animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-  // Copy code to clipboard (works on http, https, localhost, non-localhost)
+  (function() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const canvas = document.getElementById('constellation'); if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr, nodes = [], raf, running = true;
+    const accent = () => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#5b93ff';
+    let stroke = accent();
+    function hexToRgb(hex){ hex = hex.replace('#',''); if(hex.length===3) hex=hex.split('').map(c=>c+c).join(''); const n=parseInt(hex,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio||1,2); w=canvas.clientWidth; h=canvas.clientHeight;
+      canvas.width=w*dpr; canvas.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      const target = Math.min(90, Math.floor((w*h)/20000)); nodes=[];
+      for(let i=0;i<target;i++) nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.22,vy:(Math.random()-0.5)*0.22,r:Math.random()*1.6+0.6});
+    }
+    function draw(){
+      if(!running) return; ctx.clearRect(0,0,w,h); const [r,g,b]=hexToRgb(stroke); const md=130;
+      for(let i=0;i<nodes.length;i++){ const n=nodes[i]; n.x+=n.vx; n.y+=n.vy;
+        if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1;
+        for(let j=i+1;j<nodes.length;j++){ const m=nodes[j]; const dx=n.x-m.x,dy=n.y-m.y; const d=Math.sqrt(dx*dx+dy*dy);
+          if(d<md){ const a=(1-d/md)*0.5; ctx.strokeStyle=`rgba(${r},${g},${b},${a})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(m.x,m.y); ctx.stroke(); } } }
+      for(const n of nodes){ ctx.fillStyle=`rgba(${r},${g},${b},0.85)`; ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill(); }
+      raf=requestAnimationFrame(draw);
+    }
+    function start(){ running=true; cancelAnimationFrame(raf); draw(); }
+    function stop(){ running=false; cancelAnimationFrame(raf); }
+    let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(resize,150); },{passive:true});
+    document.addEventListener('visibilitychange',()=>{ document.hidden?stop():start(); });
+    new MutationObserver(()=>{ stroke=accent(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+    resize(); start();
+  })();
+
   function copyCode(btn) {
-    // Find the nearest element with data-copy: sibling code, parent's child, or nearby
-    var el = btn.closest('.code-block-wrap, .cli-cmd-row, .hero-terminal, .orch-visual');
+    var el = btn.closest('.code-block-wrap, .cli-cmd-row, .hero-terminal, .panel');
     var copyEl = el ? el.querySelector('[data-copy]') : null;
-    if (!copyEl) { copyEl = btn.parentElement.querySelector('[data-copy]'); }
+    if (!copyEl) copyEl = btn.parentElement.querySelector('[data-copy]');
     if (!copyEl) return;
-    var raw = copyEl.getAttribute('data-copy');
-    // Decode HTML entities
-    var tmp = document.createElement('textarea');
-    tmp.innerHTML = raw;
-    var text = tmp.value;
-
-    function onSuccess() {
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-      setTimeout(function() {
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-      }, 1500);
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(onSuccess).catch(function() {
-        fallbackCopy(text, onSuccess);
-      });
-    } else {
-      fallbackCopy(text, onSuccess);
-    }
+    var tmp = document.createElement('textarea'); tmp.innerHTML = copyEl.getAttribute('data-copy'); var text = tmp.value;
+    function ok(){ btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'; setTimeout(function(){ btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok).catch(function(){ fb(text, ok); });
+    else fb(text, ok);
   }
-
-  function fallbackCopy(text, onSuccess) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); onSuccess(); } catch(e) {}
-    document.body.removeChild(ta);
-  }
-
-  // Close mobile nav on link click
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.remove('open');
-    });
-  });
+  function fb(text, ok){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); ok(); }catch(e){} document.body.removeChild(ta); }
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('open')));
 </script>
 
 </body>
