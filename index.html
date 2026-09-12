@@ -310,7 +310,9 @@
     .step code.block { display: block; padding: 15px 44px 15px 18px; background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: #dbe4f3; overflow-x: auto; white-space: pre; line-height: 1.7; }
 
     /* ========== Docs ========== */
-    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+    .docs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 860px) { .docs-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .docs-grid { grid-template-columns: 1fr; } }
     .doc-card { padding: 28px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--transition); }
     .doc-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-md); }
     .doc-icon { font-size: 1.7rem; margin-bottom: 14px; }
@@ -583,17 +585,12 @@
         <div class="fs-idx">06</div><div class="fs-persona">Delivery</div><div class="fs-name">Deploy</div>
         <div class="fs-desc">Roll out with approvals, verification, and rollback.</div>
       </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">07</div><div class="fs-persona">Recorder</div><div class="fs-name">Remember</div>
+        <div class="fs-desc">Distill what the voyage learned into durable, queryable memory the whole fleet recalls.</div>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- ==================== STAT BAND ==================== -->
-<section class="band">
-  <div class="container band-grid fade-in">
-    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Agent runtimes, one interface</div></div>
-    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Databases: SQLite &middot; Postgres &middot; MySQL &middot; SQL Server</div></div>
-    <div class="stat"><div class="stat-num">&infin;</div><div class="stat-label">Parallel missions across repos</div></div>
-    <div class="stat"><div class="stat-num">MIT</div><div class="stat-label">Open source, zero lock-in</div></div>
   </div>
 </section>
 
@@ -607,19 +604,19 @@
     </div>
     <div class="bento fade-in">
       <div class="tile feature">
+        <div class="ti">&#129504;</div>
+        <h3>Durable agent memory</h3>
+        <p>Your fleet's work doesn't vanish when a voyage ends. A built-in <strong>Recorder</strong> persona distills every voyage into episodic, semantic, and procedural memory &mdash; persisted to a native store, the vessel's model context, and any external memory tools. Every persona recalls it before acting, so the fleet compounds what it learns. Fully queryable over REST and MCP: leave, come back, and just <em>ask</em> what it knows.</p>
+      </div>
+      <div class="tile s3">
         <div class="ti">&#9878;</div>
         <h3>Git worktree isolation</h3>
-        <p>Every agent works in its own isolated git worktree on its own branch. Broad-scope conflict detection prevents concurrent mutations &mdash; agents can't step on each other, and your main branch stays clean until you merge. Zero-config: <code>armada go</code> detects the runtime, registers the repo, and provisions worktrees automatically.</p>
+        <p>Every agent works in its own isolated git worktree on its own branch. Broad-scope conflict detection prevents concurrent mutations, and your main branch stays clean until you merge. Zero-config: <code>armada go</code> detects the runtime, registers the repo, and provisions worktrees automatically.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9879;</div>
         <h3>Merge queue</h3>
         <p>A background driver lands entries with hard subprocess timeouts and multi-instance-safe processing via a durable coordination lease. Optional auto-push, auto-PR, and auto-merge.</p>
-      </div>
-      <div class="tile s3">
-        <div class="ti">&#9851;</div>
-        <h3>Self-healing reliability</h3>
-        <p>Stall detection catches live-but-silent agents, crashed captains are repaired and relaunched, PID-identity verification prevents stuck "Working" states, and non-destructive dock repair unsticks jams.</p>
       </div>
       <div class="tile s2">
         <div class="ti">&#9741;</div>
@@ -637,14 +634,14 @@
         <p>Opt-in OpenTelemetry export to OTLP, Prometheus, and Loki. The Docker stack ships Grafana with a pre-provisioned "Armada Reliability" dashboard.</p>
       </div>
       <div class="tile s3">
+        <div class="ti">&#9851;</div>
+        <h3>Self-healing reliability</h3>
+        <p>Stall detection catches live-but-silent agents, crashed captains are repaired and relaunched, PID-identity verification prevents stuck "Working" states, and non-destructive dock repair unsticks jams.</p>
+      </div>
+      <div class="tile s3">
         <div class="ti">&#9781;</div>
         <h3>Backlog, objectives &amp; planning</h3>
         <p>First-class objectives and a ranked backlog with acceptance criteria and linked evidence. Plan interactively with a captain, then turn a reply into a dispatch with one click.</p>
-      </div>
-      <div class="tile s3">
-        <div class="ti">&#129504;</div>
-        <h3>Durable agent memory</h3>
-        <p>A built-in <strong>Recorder</strong> persona distills each voyage into episodic, semantic, and procedural memory &mdash; persisted to a native store, the vessel's model context, and any external memory tools. Every persona recalls it before acting, and it's queryable over REST and MCP.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9875;</div>
@@ -762,7 +759,7 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Quick Start</span>
       <h2>Up and running in minutes</h2>
-      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes.</p>
+      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes &mdash; or skip the terminal entirely and use <strong>Ask Armada</strong>, directly from the dashboard.</p>
     </div>
     <div class="steps fade-in">
       <div class="step">
@@ -809,12 +806,14 @@ claude --agent armada</code>
       <p>Guides, API references, and orchestrator setup instructions for every supported runtime.</p>
     </div>
     <div class="docs-grid fade-in">
+      <a href="https://github.com/jchristn/Armada/blob/main/GETTING_STARTED.md" target="_blank" class="doc-card"><div class="doc-icon">&#128640;</div><h3>Getting Started</h3><p>Install, dispatch your first mission, and connect an orchestrator.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/REST_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#128209;</div><h3>REST API Reference</h3><p>Full CRUD endpoints, authentication, pagination, and filtering.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/MCP_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9881;</div><h3>MCP API Reference</h3><p>All MCP tools with parameters, examples, and usage patterns.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/WEBSOCKET_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9889;</div><h3>WebSocket API</h3><p>Real-time event streaming, subscriptions, and commands.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#129302;</div><h3>Orchestrator Guides</h3><p>Setup for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/HARBOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#9875;</div><h3>Harbors &amp; Deployment</h3><p>Local vs Split mode, installing and running a Harbor host-runner.</p></a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128640;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/PIPELINES.md" target="_blank" class="doc-card"><div class="doc-icon">&#9781;</div><h3>Pipelines &amp; Personas</h3><p>Quality-gate stages, built-in pipelines, and editable persona prompts.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128188;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
     </div>
   </div>
 </section>
@@ -876,8 +875,8 @@ claude --agent armada</code>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 Armada &middot; MIT License</span>
-      <span>Built with .NET &middot; SQLite &bull; PostgreSQL &bull; MySQL &bull; SQL Server</span>
+      <span>&copy; 2026 Joel Christner &middot; MIT License</span>
+      <span>Built with AI, for AI, for you</span>
     </div>
   </div>
 </footer>
