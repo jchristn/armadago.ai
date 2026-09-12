@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armada - Multi-Agent AI Orchestration for Developers</title>
-  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, and queryable memory. One command. Multiple agents. Zero conflicts.">
-  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue">
+  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, durable agent memory, and run local or split across Harbors. One command. Multiple agents. Zero conflicts.">
+  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue, agent memory, harbors, self-hosted">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -467,8 +467,8 @@
         </p>
         <ul class="ticks">
           <li><span class="ck">&#10003;</span><span>Describe work in natural language; your AI plans and executes it through Armada.</span></li>
-          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b> &mdash; a built-in captain-backed chat that reasons about and acts on fleet state, with streaming replies and per-turn token metrics.</span></li>
-          <li><span class="ck">&#10003;</span><span>One <code>armada mcp install</code> configures Claude Code, Codex, Gemini, Cursor, and Mux.</span></li>
+          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b> &mdash; a built-in captain-backed chat that reasons about and acts on fleet state. Back it with a CLI agent or a raw inference endpoint that calls Armada's own MCP tools, scoped to you, with tool cards, streaming replies, and per-turn token metrics.</span></li>
+          <li><span class="ck">&#10003;</span><span>One <code>armada mcp install</code> configures Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</span></li>
         </ul>
         <a href="#start" class="link-arrow">Set up AI orchestration <span class="ar">&rarr;</span></a>
       </div>
@@ -551,7 +551,7 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Quality Gates</span>
       <h2>From prompt to production, with gates that run themselves</h2>
-      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>FullPipeline</code>), and every prompt is a template you can edit.</p>
+      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit.</p>
     </div>
     <div class="flow fade-in">
       <div class="flow-step">
@@ -642,8 +642,28 @@
         <p>First-class objectives and a ranked backlog with acceptance criteria and linked evidence. Plan interactively with a captain, then turn a reply into a dispatch with one click.</p>
       </div>
       <div class="tile s3">
+        <div class="ti">&#129504;</div>
+        <h3>Durable agent memory</h3>
+        <p>A built-in <strong>Recorder</strong> persona distills each voyage into episodic, semantic, and procedural memory &mdash; persisted to a native store, the vessel's model context, and any external memory tools. Every persona recalls it before acting, and it's queryable over REST and MCP.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#9875;</div>
+        <h3>Local or split with Harbors</h3>
+        <p>Run the Admiral standalone on your machine (Local mode), or detach it &mdash; containerized or remote &mdash; while a <strong>Harbor</strong> host-runner executes agent CLIs, git, and worktrees where your repos and tool logins actually live (Split mode).</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#128268;</div>
+        <h3>Bring your own inference</h3>
+        <p>Beyond the six CLI agents, register a hosted or local model as an <strong>API-endpoint captain</strong> &mdash; OpenAI-compatible, Azure OpenAI, Anthropic, Vertex AI, Bedrock, or Ollama &mdash; and it runs an in-process tool loop against Armada's own tools. Keys are write-only.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#8635;</div>
+        <h3>Self-updating</h3>
+        <p>Rebuild the Admiral from its own source and cut over to the new build with near-zero downtime, straight from the dashboard &mdash; A/B versioned slots, a pre-cutover database backup, and one-click rollback.</p>
+      </div>
+      <div class="tile s3">
         <div class="ti">&#9992;</div>
-        <h3>Remote &amp; persistent memory</h3>
+        <h3>Remote operations</h3>
         <p>Dispatch and monitor from anywhere via the REST API and a remote-ops proxy. Missions, logs, diffs, and status history stay queryable &mdash; leave, come back, and continue.</p>
       </div>
     </div>
@@ -683,7 +703,8 @@
         <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.75;margin-bottom:24px">
           Pure .NET, cross-platform, with zero-install embedded SQLite by default &mdash; and connection-pooled
           PostgreSQL, MySQL, or SQL Server when you're ready to scale. A single Admiral coordinates everything;
-          every captain works in its own isolated worktree.
+          every captain works in its own isolated worktree. Run it all on one machine, or detach the Admiral to
+          a container or remote host while a Harbor executes agents and git where your repos live.
         </p>
         <a href="#start" class="link-arrow">Run it locally <span class="ar">&rarr;</span></a>
       </div>
@@ -729,7 +750,7 @@
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy='armada ask "&lt;question&gt;"'>armada ask "&lt;question&gt;"</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Ask a captain-backed assistant about fleet state &mdash; or tell it what to do.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada inbox --critical">armada inbox --critical</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Everything that needs a human: reviews, failed landings and merges, pending approvals.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada log &lt;captain&gt; -f">armada log &lt;captain&gt; -f</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Tail a specific agent's output in real time. Like <code>tail -f</code> for your AI agents.</div></div>
-      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-install and configure the MCP server for Claude Code, Codex, Gemini, Cursor, and Mux.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-install and configure the MCP server for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada doctor">armada doctor</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">System health check. Validates runtimes, connectivity, git state, and configuration.</div></div>
     </div>
   </div>
@@ -788,11 +809,12 @@ claude --agent armada</code>
       <p>Guides, API references, and orchestrator setup instructions for every supported runtime.</p>
     </div>
     <div class="docs-grid fade-in">
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/REST_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#128209;</div><h3>REST API Reference</h3><p>Full CRUD endpoints, authentication, pagination, and filtering.</p></a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/MCP_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9881;</div><h3>MCP API Reference</h3><p>All MCP tools with parameters, examples, and usage patterns.</p></a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/WEBSOCKET_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9889;</div><h3>WebSocket API</h3><p>Real-time event streaming, subscriptions, and commands.</p></a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#129302;</div><h3>Orchestrator Guides</h3><p>Setup for Claude Code, Codex, Gemini, and Cursor.</p></a>
-      <a href="https://github.com/jchristn/Armada/blob/main/Armada/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128640;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/REST_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#128209;</div><h3>REST API Reference</h3><p>Full CRUD endpoints, authentication, pagination, and filtering.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/MCP_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9881;</div><h3>MCP API Reference</h3><p>All MCP tools with parameters, examples, and usage patterns.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/WEBSOCKET_API.md" target="_blank" class="doc-card"><div class="doc-icon">&#9889;</div><h3>WebSocket API</h3><p>Real-time event streaming, subscriptions, and commands.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#129302;</div><h3>Orchestrator Guides</h3><p>Setup for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/HARBOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#9875;</div><h3>Harbors &amp; Deployment</h3><p>Local vs Split mode, installing and running a Harbor host-runner.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128640;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
     </div>
   </div>
 </section>
@@ -835,19 +857,21 @@ claude --agent armada</code>
         <h4>Resources</h4>
         <ul>
           <li><a href="https://github.com/jchristn/Armada" target="_blank">GitHub</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/REST_API.md" target="_blank">API Docs</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/MCP_API.md" target="_blank">MCP Docs</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/Armada.postman_collection.json" target="_blank">Postman Collection</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/REST_API.md" target="_blank">API Docs</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/MCP_API.md" target="_blank">MCP Docs</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank">Postman Collection</a></li>
           <li><a href="https://github.com/jchristn/Armada/issues" target="_blank">Report Issue</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Orchestrators</h4>
         <ul>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank">Claude Code</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CODEX_AS_ORCHESTRATOR.md" target="_blank">Codex</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/GEMINI_AS_ORCHESTRATOR.md" target="_blank">Gemini</a></li>
-          <li><a href="https://github.com/jchristn/Armada/blob/main/Armada/docs/CURSOR_AS_ORCHESTRATOR.md" target="_blank">Cursor</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank">Claude Code</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/CODEX_AS_ORCHESTRATOR.md" target="_blank">Codex</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/GEMINI_AS_ORCHESTRATOR.md" target="_blank">Gemini</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/CURSOR_AS_ORCHESTRATOR.md" target="_blank">Cursor</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/MUX_AS_ORCHESTRATOR.md" target="_blank">Mux</a></li>
+          <li><a href="https://github.com/jchristn/Armada/blob/main/docs/OPENCODE_AS_ORCHESTRATOR.md" target="_blank">OpenCode</a></li>
         </ul>
       </div>
     </div>
