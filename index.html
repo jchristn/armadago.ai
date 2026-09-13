@@ -233,15 +233,19 @@
     .sc-visual .frame.glow-top::before { content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px; background: var(--gradient-accent); opacity: 0.7; z-index: 2; }
 
     /* ========== Pipeline (full-width horizontal) ========== */
-    .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; }
-    .flow-step { flex: 1 1 140px; min-width: 128px; padding: 24px 16px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all var(--transition); position: relative; }
+    /* Even card grid so any step count wraps into uniform rows (8 steps -> 4x2) instead of a
+       flex row leaving a lone, full-width card stranded beneath. */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .flow-step { padding: 24px 16px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all var(--transition); position: relative; }
     .flow-step:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: translateY(-4px); z-index: 2; }
     .flow-step .fs-idx { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 14px; }
     .flow-step .fs-persona { font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
     .flow-step .fs-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
     .flow-step .fs-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
-    .flow-connector { display: flex; align-items: center; color: var(--text-tertiary); font-size: 1.1rem; padding: 0 4px; }
-    @media (max-width: 760px) { .flow { flex-direction: column; } .flow-connector { transform: rotate(90deg); padding: 6px 0; justify-content: center; } }
+    /* Inline arrow separators are removed from the grid flow (display:none takes them out of layout). */
+    .flow-connector { display: none; }
+    @media (max-width: 900px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .flow { grid-template-columns: 1fr; } }
 
     /* ========== Bento grid ========== */
     .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; grid-auto-rows: 1fr; }
