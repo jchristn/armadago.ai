@@ -553,7 +553,7 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Quality Gates</span>
       <h2>From prompt to production, with gates that run themselves</h2>
-      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit.</p>
+      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a <b>Linter</b> gate checks the changed code and documentation for style and correctness, a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit.</p>
     </div>
     <div class="flow fade-in">
       <div class="flow-step">
@@ -572,22 +572,27 @@
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">04</div><div class="fs-persona">Judge</div><div class="fs-name">Review</div>
+        <div class="fs-idx">04</div><div class="fs-persona">Linter</div><div class="fs-name">Lint</div>
+        <div class="fs-desc">Check the changed code and docs for style and correctness; fix clear issues, flag the rest.</div>
+      </div>
+      <div class="flow-connector">&rarr;</div>
+      <div class="flow-step">
+        <div class="fs-idx">05</div><div class="fs-persona">Judge</div><div class="fs-name">Review</div>
         <div class="fs-desc">Examine the diff against the mission &mdash; PASS or FAIL.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">05</div><div class="fs-persona">Merge Queue</div><div class="fs-name">Land</div>
+        <div class="fs-idx">06</div><div class="fs-persona">Merge Queue</div><div class="fs-name">Land</div>
         <div class="fs-desc">Batch-test and merge safely, with auto-push and auto-PR options.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">06</div><div class="fs-persona">Delivery</div><div class="fs-name">Deploy</div>
+        <div class="fs-idx">07</div><div class="fs-persona">Delivery</div><div class="fs-name">Deploy</div>
         <div class="fs-desc">Roll out with approvals, verification, and rollback.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">07</div><div class="fs-persona">Recorder</div><div class="fs-name">Remember</div>
+        <div class="fs-idx">08</div><div class="fs-persona">Recorder</div><div class="fs-name">Remember</div>
         <div class="fs-desc">Distill what the voyage learned into durable, queryable memory the whole fleet recalls.</div>
       </div>
     </div>
