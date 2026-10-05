@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armada - Multi-Agent AI Orchestration for Developers</title>
-  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, durable agent memory, and run local or split across Harbors. One command. Multiple agents. Zero conflicts.">
-  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue, agent memory, harbors, self-hosted">
+  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, durable agent memory, a dashboard and a full terminal UI, and run local or split across Harbors. One command. Multiple agents. Zero conflicts.">
+  <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue, agent memory, harbors, terminal UI, TUI, self-hosted">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -206,6 +206,7 @@
     .strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--panel-tint); padding: 30px 0; }
     .strip-inner { display: flex; align-items: center; gap: clamp(20px, 4vw, 54px); flex-wrap: wrap; justify-content: space-between; }
     .strip-label { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-tertiary); white-space: nowrap; }
+    @media (max-width: 420px) { .strip-label { white-space: normal; } }
     .strip-agents { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 34px); flex-wrap: wrap; }
     .strip-agent { display: inline-flex; align-items: center; gap: 9px; font-weight: 600; font-size: 0.98rem; color: var(--text-secondary); transition: color var(--transition); }
     .strip-agent:hover { color: var(--text-primary); }
@@ -295,17 +296,17 @@
     @media (max-width: 900px) { .arch-wrap { grid-template-columns: 1fr; } }
 
     /* ========== CLI ========== */
-    .cli-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .cli-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 14px; }
     .cli-card { padding: 20px 24px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all var(--transition); }
     .cli-card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .cli-cmd-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-    .cli-cmd { font-family: var(--font-mono); font-size: 0.88rem; font-weight: 500; color: var(--accent); }
+    .cli-cmd { font-family: var(--font-mono); font-size: 0.88rem; font-weight: 500; color: var(--accent); min-width: 0; overflow-wrap: anywhere; }
     .cli-cmd-row .copy-btn { position: static; flex-shrink: 0; }
     .cli-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
 
     /* ========== Steps (horizontal) ========== */
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    @media (max-width: 860px) { .steps { grid-template-columns: minmax(0, 1fr); } }
     .step { padding: 30px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); }
     .step-num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 11px; background: var(--gradient-accent); color: #fff; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; margin-bottom: 18px; box-shadow: 0 6px 20px -6px var(--accent-glow); }
     .step h3 { font-size: 1.08rem; font-weight: 600; margin-bottom: 10px; }
@@ -411,7 +412,7 @@
         </a>
       </div>
       <div class="hero-meta">
-        <span><span class="dot"></span> Open Source &middot; MIT</span>
+        <span><span class="dot"></span> v1.0 &middot; Open Source &middot; MIT</span>
         <span>6 Agent Runtimes</span>
         <span>Cross-Platform</span>
         <span>Built on .NET</span>
@@ -473,7 +474,7 @@
         </p>
         <ul class="ticks">
           <li><span class="ck">&#10003;</span><span>Describe work in natural language; your AI plans and executes it through Armada.</span></li>
-          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b> &mdash; a built-in captain-backed chat that reasons about and acts on fleet state. Back it with a CLI agent or a raw inference endpoint that calls Armada's own MCP tools, scoped to you, with tool cards, streaming replies, and per-turn token metrics.</span></li>
+          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b>, your home base: saved, private conversations in the dashboard or the terminal, backed by any CLI agent or an inference endpoint. Anything that changes state arrives as a <b>proposal you approve</b>, then a live work card tracks it to landing.</span></li>
           <li><span class="ck">&#10003;</span><span>One <code>armada mcp install</code> configures Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</span></li>
         </ul>
         <a href="#start" class="link-arrow">Set up AI orchestration <span class="ar">&rarr;</span></a>
@@ -506,13 +507,13 @@
         <span class="eyebrow">Single Pane of Glass</span>
         <h2>Every agent, every repo &mdash; one live view</h2>
         <p>
-          A dashboard with live WebSocket updates ships embedded in the server. Watch captains, missions, voyages,
-          signals, and the merge queue across all your projects without juggling a dozen terminals.
+          A dashboard with live WebSocket updates ships embedded in the server, in nine languages. Watch captains,
+          missions, voyages, signals, and the merge queue across all your projects without juggling a dozen terminals.
         </p>
         <ul class="ticks">
           <li><span class="ck">&#10003;</span><span>Full mission history, logs, diffs, and signals stay in <b>queryable memory</b> &mdash; pick up exactly where you left off.</span></li>
           <li><span class="ck">&#10003;</span><span>A <b>Needs-You inbox</b> surfaces everything awaiting a human decision, most-urgent first.</span></li>
-          <li><span class="ck">&#10003;</span><span>Optional standalone React dashboard for production deployments.</span></li>
+          <li><span class="ck">&#10003;</span><span>A keyboard-first <b>terminal UI</b> (<code>armada tui</code>) opens every dashboard screen, plus an Approvals center, for SSH sessions and machines without a browser.</span></li>
         </ul>
         <a href="#capabilities" class="link-arrow">Explore capabilities <span class="ar">&rarr;</span></a>
       </div>
@@ -536,7 +537,7 @@
         <ul class="ticks">
           <li><span class="ck">&#10003;</span><span>In-browser workspace: file tree, terminal, and full diff review.</span></li>
           <li><span class="ck">&#10003;</span><span>Environments &amp; deployments with <b>approvals, verification, and rollback</b>; releases with derived notes.</span></li>
-          <li><span class="ck">&#10003;</span><span>Backlog and objectives with acceptance criteria feed straight into dispatch.</span></li>
+          <li><span class="ck">&#10003;</span><span>A ranked <b>backlog</b>: refine an objective with a captain into acceptance criteria, then dispatch it.</span></li>
         </ul>
         <a href="#pipeline" class="link-arrow">See the pipeline <span class="ar">&rarr;</span></a>
       </div>
@@ -557,7 +558,7 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Quality Gates</span>
       <h2>From prompt to production, with gates that run themselves</h2>
-      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a <b>Linter</b> gate checks the changed code and documentation for style and correctness, a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit.</p>
+      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a <b>Linter</b> gate checks the changed code and documentation for style and correctness, a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit. <code>FullPipeline</code> adds Product Manager and Usability Engineer stages, and you choose which captain runs each step.</p>
     </div>
     <div class="flow fade-in">
       <div class="flow-step">
@@ -587,7 +588,7 @@
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
         <div class="fs-idx">06</div><div class="fs-persona">Merge Queue</div><div class="fs-name">Land</div>
-        <div class="fs-desc">Batch-test and merge safely, with auto-push and auto-PR options.</div>
+        <div class="fs-desc">Local merge, pull request, or a merge queue that tests each branch against the latest target.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
@@ -625,12 +626,12 @@
       <div class="tile s3">
         <div class="ti">&#9879;</div>
         <h3>Merge queue</h3>
-        <p>A background driver lands entries with hard subprocess timeouts and multi-instance-safe processing via a durable coordination lease. Optional auto-push, auto-PR, and auto-merge.</p>
+        <p>Choose a landing mode per vessel or voyage: local merge, pull request, or the merge queue, which tests and lands each branch in turn with hard subprocess timeouts and a durable coordination lease. Optional auto-push, auto-PR, and auto-merge.</p>
       </div>
       <div class="tile s2">
         <div class="ti">&#9741;</div>
         <h3>MCP + REST + WebSocket</h3>
-        <p>A standards-compliant MCP server, a full CRUD REST API on port 7890 with built-in OpenAPI, and live event streaming at <code>/ws</code>.</p>
+        <p>A standards-compliant MCP server, a full CRUD REST API on port 7890 with built-in OpenAPI, and live event streaming at <code>/ws</code>. Frozen at 1.0: additive-only across 1.x.</p>
       </div>
       <div class="tile s2">
         <div class="ti">&#128451;</div>
@@ -650,7 +651,17 @@
       <div class="tile s3">
         <div class="ti">&#9781;</div>
         <h3>Backlog, objectives &amp; planning</h3>
-        <p>First-class objectives and a ranked backlog with acceptance criteria and linked evidence. Plan interactively with a captain, then turn a reply into a dispatch with one click.</p>
+        <p>First-class objectives and a ranked backlog with acceptance criteria and linked evidence. Refine an objective with a captain, plan interactively against the repo, then turn a reply into a dispatch with one click.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#128203;</div>
+        <h3>Fleet actions &amp; vessel health</h3>
+        <p>Import every repo under a directory in one pass, then grade each vessel: drift, stale branches, outdated or vulnerable packages, tests, and CI. Run one command or one captain mission across all the vessels that need it, with per-vessel results.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#128274;</div>
+        <h3>Multi-tenant, secure by default</h3>
+        <p>Tenants, users, and roles with bearer and session auth, and authorization on every route and MCP tool. Each captain gets a <strong>mission-scoped MCP token</strong>, an Admiral on default credentials stays on localhost, and every shell command Armada runs is audited.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9875;</div>
@@ -670,7 +681,7 @@
       <div class="tile s3">
         <div class="ti">&#9992;</div>
         <h3>Remote operations</h3>
-        <p>Dispatch and monitor from anywhere via the REST API and a remote-ops proxy. Missions, logs, diffs, and status history stay queryable &mdash; leave, come back, and continue.</p>
+        <p>Your Admiral dials out to <strong>Armada.Proxy</strong> over an authenticated tunnel; sign in at the proxy, pick a deployment, and use the same dashboard from anywhere. Missions, logs, diffs, and status history stay queryable.</p>
       </div>
     </div>
   </div>
@@ -685,7 +696,7 @@
       <p>Tangible advantages that change how you work with AI coding agents.</p>
     </div>
     <div class="why-grid fade-in">
-      <div class="why-item"><div class="why-num">01</div><div><h3>Single pane of glass</h3><p>Monitor and manage all AI agent work across every project from one unified dashboard.</p></div></div>
+      <div class="why-item"><div class="why-num">01</div><div><h3>Single pane of glass</h3><p>Monitor and manage all AI agent work across every project from one dashboard, in the browser or the terminal.</p></div></div>
       <div class="why-item"><div class="why-num">02</div><div><h3>Reduced context-switching</h3><p>History, logs, diffs, and signals are preserved, so you pick up exactly where you left off.</p></div></div>
       <div class="why-item"><div class="why-num">03</div><div><h3>Scale across more projects</h3><p>Dispatch parallel missions across multiple repositories at once &mdash; more than one developer normally could.</p></div></div>
       <div class="why-item"><div class="why-num">04</div><div><h3>Planning meets conversational AI</h3><p>Task tracking and orchestration sit directly inside agents like Claude Code, bridging planning and execution.</p></div></div>
@@ -694,7 +705,7 @@
       <div class="why-item"><div class="why-num">07</div><div><h3>Auditable event trails</h3><p>Every dispatch, transition, completion, and failure is recorded in a structured, queryable log.</p></div></div>
       <div class="why-item"><div class="why-num">08</div><div><h3>Reproducible workflows</h3><p>Voyages capture a batch of missions as a reusable unit; retry or re-dispatch with a single command.</p></div></div>
       <div class="why-item"><div class="why-num">09</div><div><h3>Team visibility</h3><p>Real-time WebSocket updates, a REST API, and notifications keep everyone informed without polling.</p></div></div>
-      <div class="why-item"><div class="why-num">10</div><div><h3>Productivity anywhere</h3><p>Dispatch remotely, check progress from any device, and let agents keep shipping while you step away.</p></div></div>
+      <div class="why-item"><div class="why-num">10</div><div><h3>Productivity anywhere</h3><p>Dispatch remotely, check progress from any device or an SSH session, and let agents keep shipping while you step away.</p></div></div>
     </div>
   </div>
 </section>
@@ -715,7 +726,7 @@
         <a href="#start" class="link-arrow">Run it locally <span class="ar">&rarr;</span></a>
       </div>
       <div class="arch-diagram fade-in">
-        <div class="arch-row"><div class="arch-node highlight"><div class="label">You</div><div class="name">CLI / AI Chat / API</div></div></div>
+        <div class="arch-row"><div class="arch-node highlight"><div class="label">You</div><div class="name">CLI / TUI / AI Chat / API</div></div></div>
         <div class="arch-arrow">&#8595;</div>
         <div class="arch-row"><div class="arch-node highlight"><div class="label">Coordinator</div><div class="name">Admiral</div></div></div>
         <div class="arch-arrow">&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;&nbsp;&nbsp;&nbsp;&nbsp;&#8595;</div>
@@ -747,14 +758,15 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Command Line</span>
       <h2>Powerful CLI, intuitive commands</h2>
-      <p>Everything you need from your terminal &mdash; rich output powered by Spectre.Console.</p>
+      <p>Everything you need from your terminal &mdash; rich output powered by Spectre.Console, and a full terminal UI when you want more than a command.</p>
     </div>
     <div class="cli-grid fade-in">
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy='armada go "&lt;prompt&gt;"'>armada go "&lt;prompt&gt;"</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-init, detect runtime, spawn captain, dispatch task. The one command to rule them all.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada status">armada status</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Dashboard scoped to current repo. Add <code>--all</code> for a global view across vessels.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada watch">armada watch</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Live auto-refreshing dashboard with desktop notifications on completion or failure.</div></div>
-      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy='armada ask "&lt;question&gt;"'>armada ask "&lt;question&gt;"</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Ask a captain-backed assistant about fleet state &mdash; or tell it what to do.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada tui">armada tui</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">The whole dashboard in your terminal: every screen, Ask Armada, and an Approvals center. Keyboard-first, and it works over SSH.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada inbox --critical">armada inbox --critical</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Everything that needs a human: reviews, failed landings and merges, pending approvals.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada health">armada health</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Grade every vessel: drift, stale branches, outdated or vulnerable packages, tests, and CI.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada log &lt;captain&gt; -f">armada log &lt;captain&gt; -f</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Tail a specific agent's output in real time. Like <code>tail -f</code> for your AI agents.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-install and configure the MCP server for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada doctor">armada doctor</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">System health check. Validates runtimes, connectivity, git state, and configuration.</div></div>
@@ -768,17 +780,17 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Quick Start</span>
       <h2>Up and running in minutes</h2>
-      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes &mdash; or skip the terminal entirely and use <strong>Ask Armada</strong>, directly from the dashboard.</p>
+      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes, or open <strong>Ask Armada</strong> in the dashboard or <code>armada tui</code> and describe what you want. Prefer containers? Run the <code>jchristn77/armada-server</code> image; see the <a href="https://github.com/jchristn/Armada/blob/main/docs/DOCKER.md" target="_blank">Docker guide</a>.</p>
     </div>
     <div class="steps fade-in">
       <div class="step">
         <div class="step-num">1</div>
         <h3>Install Armada</h3>
-        <p>Clone the repo and install as a global .NET tool:</p>
+        <p>Clone the repo and run the install script for your OS (<code>linux</code>, <code>macos</code>, or <code>windows</code>):</p>
         <div class="code-block-wrap">
-          <code class="block" data-copy="git clone https://github.com/jchristn/armada&#10;cd armada/src&#10;dotnet tool install -g Armada.Helm">git clone https://github.com/jchristn/armada
-cd armada/src
-dotnet tool install -g Armada.Helm</code>
+          <code class="block" data-copy="git clone https://github.com/jchristn/armada&#10;cd armada&#10;./scripts/macos/install.sh">git clone https://github.com/jchristn/armada
+cd armada
+./scripts/macos/install.sh</code>
           <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
@@ -822,6 +834,10 @@ claude --agent armada</code>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/CLAUDE_CODE_AS_ORCHESTRATOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#129302;</div><h3>Orchestrator Guides</h3><p>Setup for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/HARBOR.md" target="_blank" class="doc-card"><div class="doc-icon">&#9875;</div><h3>Harbors &amp; Deployment</h3><p>Local vs Split mode, installing and running a Harbor host-runner.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/PIPELINES.md" target="_blank" class="doc-card"><div class="doc-icon">&#9781;</div><h3>Pipelines &amp; Personas</h3><p>Quality-gate stages, built-in pipelines, and editable persona prompts.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/ASK_ARMADA_HOME_BASE.md" target="_blank" class="doc-card"><div class="doc-icon">&#128172;</div><h3>Ask Armada</h3><p>Conversations, proposals and approvals, quick actions, and work tracking.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/TUI.md" target="_blank" class="doc-card"><div class="doc-icon">&#9000;</div><h3>Terminal UI</h3><p>Profiles, every screen, the Approvals center, and the full key map.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/DOCKER.md" target="_blank" class="doc-card"><div class="doc-icon">&#128230;</div><h3>Docker Deployment</h3><p>Images, compose stacks, split mode, the proxy, and troubleshooting.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/CAPTAINS.md" target="_blank" class="doc-card"><div class="doc-icon">&#129517;</div><h3>Captain Support Matrix</h3><p>What each runtime supports, how it launches, and running agents safely.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128188;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
     </div>
   </div>
