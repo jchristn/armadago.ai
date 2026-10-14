@@ -349,6 +349,24 @@
     .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
     @media (prefers-reduced-motion: reduce) { .cursor, .fade-in { animation: none; transition: none; } #constellation { display: none; } .hero-terminal { transform: none !important; } }
+    /* ========== Screenshot galleries ========== */
+    .screenshot-galleries { display: grid; gap: 16px; }
+    .screenshot-gallery { border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--bg-elev); overflow: hidden; }
+    .screenshot-gallery summary { cursor: pointer; padding: 22px 26px; font-size: 1.1rem; font-weight: 650; color: var(--text-primary); }
+    .screenshot-gallery summary::marker { color: var(--accent); }
+    .screenshot-gallery summary span { color: var(--text-secondary); font-size: .9rem; font-weight: 400; margin-left: 10px; }
+    .screenshot-gallery summary:hover { background: var(--bg-elev-hover); }
+    .screenshot-gallery summary:focus-visible, .screenshot-grid a:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+    .screenshot-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 0 26px 26px; }
+    .screenshot-grid figure { min-width: 0; margin: 0; align-self: start; }
+    .screenshot-grid a { display: block; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-code); }
+    .screenshot-grid img { display: block; width: 100%; height: auto; }
+    .screenshot-grid figcaption { margin-top: 10px; color: var(--text-secondary); font-size: .9rem; line-height: 1.5; }
+    @media (max-width: 700px) {
+      .screenshot-gallery summary { padding: 18px; }
+      .screenshot-gallery summary span { display: block; margin: 6px 0 0; }
+      .screenshot-grid { grid-template-columns: 1fr; padding: 0 18px 18px; gap: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -375,6 +393,7 @@
       <li><a href="#pipeline">Pipeline</a></li>
       <li><a href="#capabilities">Capabilities</a></li>
       <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
       <li><a href="#start">Get Started</a></li>
       <li><a href="#docs">Docs</a></li>
     </ul>
@@ -519,7 +538,7 @@
       </div>
       <div class="sc-visual fade-in">
         <div class="frame glow-top">
-          <img src="assets/screenshot-1.png" alt="Armada web dashboard - system status" loading="lazy">
+          <img src="assets/screenshot-dashboard-1.png" alt="Armada web dashboard - system status" loading="lazy">
           <div class="cap">Dashboard &mdash; captains, missions, voyages, and real-time signals in one place</div>
         </div>
       </div>
@@ -543,12 +562,136 @@
       </div>
       <div class="sc-visual fade-in">
         <div class="frame glow-top">
-          <img src="assets/screenshot-3.png" alt="Armada mission detail with code diff" loading="lazy">
-          <div class="cap">Mission Detail &mdash; full context including diff, status, and timing</div>
+          <img src="assets/screenshot-dashboard-4.png" alt="Armada architect persona prompt template" loading="lazy">
+          <div class="cap">Persona Templates: editable stage instructions and handoff requirements</div>
         </div>
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- ==================== SCREENSHOTS ==================== -->
+<section class="section divide" id="screenshots" aria-labelledby="screenshots-title">
+  <div class="container">
+    <div class="section-head fade-in">
+      <span class="eyebrow">Product Tour</span>
+      <h2 id="screenshots-title">See Armada in action</h2>
+      <p>Explore the dashboard, Harbor desktop app, and terminal UI. Expand a surface and select a screenshot to view it at full size.</p>
+    </div>
+    <div class="screenshot-galleries">
+      <details class="screenshot-gallery">
+        <summary>Dashboard <span>8 screenshots</span></summary>
+        <div class="screenshot-grid">
+          <figure>
+            <a href="assets/screenshot-dashboard-1.png" target="_blank" rel="noopener noreferrer" aria-label="Open System status and mission history at full size">
+              <img src="assets/screenshot-dashboard-1.png" alt="System status and mission history" width="2760" height="1494" loading="lazy" decoding="async">
+            </a>
+            <figcaption>System status and mission history</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-2.png" target="_blank" rel="noopener noreferrer" aria-label="Open Ask Armada conversation and status report at full size">
+              <img src="assets/screenshot-dashboard-2.png" alt="Ask Armada conversation and status report" width="2832" height="1512" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Ask Armada conversation and status report</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-3.png" target="_blank" rel="noopener noreferrer" aria-label="Open Fleet action configuration at full size">
+              <img src="assets/screenshot-dashboard-3.png" alt="Fleet action configuration" width="2834" height="1518" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Fleet action configuration</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-4.png" target="_blank" rel="noopener noreferrer" aria-label="Open Architect persona prompt template at full size">
+              <img src="assets/screenshot-dashboard-4.png" alt="Architect persona prompt template" width="2808" height="1530" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Architect persona prompt template</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-5.png" target="_blank" rel="noopener noreferrer" aria-label="Open API request detail and redacted headers at full size">
+              <img src="assets/screenshot-dashboard-5.png" alt="API request detail and redacted headers" width="2804" height="1520" loading="lazy" decoding="async">
+            </a>
+            <figcaption>API request detail and redacted headers</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-6.png" target="_blank" rel="noopener noreferrer" aria-label="Open API request activity and summary at full size">
+              <img src="assets/screenshot-dashboard-6.png" alt="API request activity and summary" width="2808" height="1368" loading="lazy" decoding="async">
+            </a>
+            <figcaption>API request activity and summary</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-7.png" target="_blank" rel="noopener noreferrer" aria-label="Open Token activity heatmap at full size">
+              <img src="assets/screenshot-dashboard-7.png" alt="Token activity heatmap" width="2808" height="1518" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Token activity heatmap</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-dashboard-8.png" target="_blank" rel="noopener noreferrer" aria-label="Open Token usage over time and by model at full size">
+              <img src="assets/screenshot-dashboard-8.png" alt="Token usage over time and by model" width="2810" height="1530" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Token usage over time and by model</figcaption>
+          </figure>
+        </div>
+      </details>
+      <details class="screenshot-gallery">
+        <summary>Harbor desktop app <span>4 screenshots</span></summary>
+        <div class="screenshot-grid">
+          <figure>
+            <a href="assets/screenshot-harbor-1.png" target="_blank" rel="noopener noreferrer" aria-label="Open Harbor connection and activity log at full size">
+              <img src="assets/screenshot-harbor-1.png" alt="Harbor connection and activity log" width="1436" height="1116" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Harbor connection and activity log</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-harbor-2.png" target="_blank" rel="noopener noreferrer" aria-label="Open Harbor status overview and connection settings at full size">
+              <img src="assets/screenshot-harbor-2.png" alt="Harbor status overview and connection settings" width="2012" height="1682" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Harbor status overview and connection settings</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-harbor-3.png" target="_blank" rel="noopener noreferrer" aria-label="Open Harbor activity and jobs over time at full size">
+              <img src="assets/screenshot-harbor-3.png" alt="Harbor activity and jobs over time" width="2018" height="1282" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Harbor activity and jobs over time</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-harbor-4.png" target="_blank" rel="noopener noreferrer" aria-label="Open Harbor token usage and launch speed at full size">
+              <img src="assets/screenshot-harbor-4.png" alt="Harbor token usage and launch speed" width="2014" height="1456" loading="lazy" decoding="async">
+            </a>
+            <figcaption>Harbor token usage and launch speed</figcaption>
+          </figure>
+        </div>
+      </details>
+      <details class="screenshot-gallery">
+        <summary>Terminal UI (TUI) <span>4 screenshots</span></summary>
+        <div class="screenshot-grid">
+          <figure>
+            <a href="assets/screenshot-tui-1.png" target="_blank" rel="noopener noreferrer" aria-label="Open TUI sign-in screen at full size">
+              <img src="assets/screenshot-tui-1.png" alt="TUI sign-in screen" width="2874" height="1564" loading="lazy" decoding="async">
+            </a>
+            <figcaption>TUI sign-in screen</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-tui-2.png" target="_blank" rel="noopener noreferrer" aria-label="Open TUI server settings at full size">
+              <img src="assets/screenshot-tui-2.png" alt="TUI server settings" width="2884" height="1576" loading="lazy" decoding="async">
+            </a>
+            <figcaption>TUI server settings</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-tui-3.png" target="_blank" rel="noopener noreferrer" aria-label="Open TUI token activity heatmap and charts at full size">
+              <img src="assets/screenshot-tui-3.png" alt="TUI token activity heatmap and charts" width="2884" height="1576" loading="lazy" decoding="async">
+            </a>
+            <figcaption>TUI token activity heatmap and charts</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/screenshot-tui-4.png" target="_blank" rel="noopener noreferrer" aria-label="Open TUI usability engineer persona at full size">
+              <img src="assets/screenshot-tui-4.png" alt="TUI usability engineer persona" width="2882" height="1578" loading="lazy" decoding="async">
+            </a>
+            <figcaption>TUI usability engineer persona</figcaption>
+          </figure>
+        </div>
+      </details>
+    </div>
   </div>
 </section>
 
