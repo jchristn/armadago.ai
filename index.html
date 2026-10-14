@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armada - Multi-Agent AI Orchestration for Developers</title>
-  <meta name="description" content="Armada orchestrates fleets of AI coding agents - Claude Code, Codex, Gemini, Cursor, Mux, OpenCode - working in parallel across your repos. Isolated worktrees, quality-gate pipelines, merge queue, durable agent memory, a dashboard and a full terminal UI, and run local or split across Harbors. One command. Multiple agents. Zero conflicts.">
+  <meta name="description" content="Armada is a self-hosted coordinator for AI coding agents and API models. Run independent tasks across repositories in isolated worktrees, choose persona-based routing and review gates, and track logs, diffs, tokens, and outcomes from the web, terminal, or mobile app.">
   <meta name="keywords" content="AI orchestration, multi-agent, coding agents, Claude Code, Codex, developer tools, CLI, MCP, parallel development, git worktrees, merge queue, agent memory, harbors, terminal UI, TUI, self-hosted">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -419,9 +419,9 @@
       <span class="eyebrow">Multi-agent AI orchestration</span>
       <h1>One developer.<br><span class="gradient">An entire fleet.</span></h1>
       <p class="hero-sub">
-        Orchestrate fleets of AI coding agents &mdash; Claude Code, Codex, Gemini, Cursor, Mux, OpenCode &mdash;
-        working in parallel across your repos. Isolated worktrees, quality-gate pipelines, safe merges. Your fleet's
-        work stays in queryable memory, so you can leave, come back, and just <em>ask</em> where things stand.
+        Put independent tasks in flight across your repositories with the agents and models you already use.
+        Armada gives each mission its own branch and worktree, routes roles to your preferred captains, and tracks
+        logs, diffs, approvals, and outcomes. Come back to a clear record of what landed and what still needs you.
       </p>
       <div class="hero-ctas">
         <a href="#start" class="btn btn-primary">Get Started</a>
@@ -431,21 +431,24 @@
         </a>
       </div>
       <div class="hero-meta">
-        <span><span class="dot"></span> v1.0 &middot; Open Source &middot; MIT</span>
-        <span>6 Agent Runtimes</span>
+        <span><span class="dot"></span> v1.1.0 &middot; Open Source &middot; MIT</span>
+        <span>CLI + API Captains</span>
         <span>Cross-Platform</span>
         <span>Built on .NET</span>
       </div>
     </div>
     <div class="hero-right">
       <div class="hero-terminal panel" style="position:relative">
-        <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; armada &mdash; zsh</div>
+        <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; Armada CLI example</div>
         <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy to clipboard" style="top:46px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         </button>
-        <div class="terminal-body" data-copy='armada go "Harden the API: 1) Add rate limiting 2) Add input validation 3) Add request logging"'>
-          <span class="comment"># One command dispatches a fleet</span><br>
-          <span class="prompt">$</span> <span class="cmd">armada go</span> <span class="string">"Harden the API: 1) rate limiting 2) input validation 3) request logging"</span><br>
+        <div class="terminal-body" data-copy='armada go "Harden the API" --task "Add rate limiting" --task "Add input validation" --task "Add request logging"'>
+          <span class="comment"># Explicit tasks become separate missions</span><br>
+          <span class="prompt">$</span> <span class="cmd">armada go</span> <span class="string">"Harden the API"</span> \<br>
+          &nbsp;&nbsp;<span class="cmd">--task</span> <span class="string">"Add rate limiting"</span> \<br>
+          &nbsp;&nbsp;<span class="cmd">--task</span> <span class="string">"Add input validation"</span> \<br>
+          &nbsp;&nbsp;<span class="cmd">--task</span> <span class="string">"Add request logging"</span><br>
           <br>
           <span class="output">Admiral  </span> <span class="info">Initializing fleet...</span><br>
           <span class="output">Admiral  </span> <span class="success">&#10003;</span> <span class="output">Vessel detected: task-api</span><br>
@@ -454,7 +457,7 @@
           <span class="output">Captain-2</span> <span class="info">[msn_2]</span> <span class="output">Add input validation to POST /tasks</span><br>
           <span class="output">Captain-3</span> <span class="info">[msn_3]</span> <span class="output">Add request logging + correlation IDs</span><br>
           <br>
-          <span class="output">Admiral  </span> <span class="success">&#10003; Voyage complete: 3/3 succeeded (7m 22s)</span><br>
+          <span class="output">Admiral  </span> <span class="success">&#10003; Example outcome: 3/3 missions complete</span><br>
           <span class="prompt">$</span> <span class="cursor">_</span>
         </div>
       </div>
@@ -488,20 +491,20 @@
         <h2>Your AI agent becomes <span class="gradient">the orchestrator</span></h2>
         <p>
           Chat with your favorite AI assistant and have it command an entire fleet. Armada's MCP server exposes tools
-          that let any MCP-capable AI decompose work, dispatch parallel missions, monitor progress, handle failures,
-          and merge results &mdash; autonomously.
+          that let an MCP-capable assistant decompose work, create missions, monitor progress, and request retries
+          or landing actions within its permissions. Armada supplies the worktrees, state, and execution machinery.
         </p>
         <ul class="ticks">
           <li><span class="ck">&#10003;</span><span>Describe work in natural language; your AI plans and executes it through Armada.</span></li>
-          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b>, your home base: saved, private conversations in the dashboard or the terminal, backed by any CLI agent or an inference endpoint. Anything that changes state arrives as a <b>proposal you approve</b>, then a live work card tracks it to landing.</span></li>
-          <li><span class="ck">&#10003;</span><span>One <code>armada mcp install</code> configures Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</span></li>
+          <li><span class="ck">&#10003;</span><span><b>Ask Armada</b> keeps private conversations on the web, terminal, or mobile app. It reads live fleet state and presents supported operational actions as <b>proposals you approve</b>, with work cards tracking the result.</span></li>
+          <li><span class="ck">&#10003;</span><span><code>armada mcp install</code> configures supported clients including Claude Code, Codex, Gemini, and Cursor, plus Mux and OpenCode when installed.</span></li>
         </ul>
         <a href="#start" class="link-arrow">Set up AI orchestration <span class="ar">&rarr;</span></a>
       </div>
       <div class="sc-visual fade-in">
         <div class="panel">
-          <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; AI Orchestrator Session</div>
-          <div class="terminal-body chat"><span class="comment">/* You chat naturally &mdash; your AI handles the rest */</span>
+          <div class="panel-head"><span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>&nbsp; Illustrative MCP Session</div>
+          <div class="terminal-body chat"><span class="comment">/* Describe the outcome; the assistant uses Armada tools */</span>
 
 <span style="color:#fbbf24">You:</span> <span style="color:#dbe4f3">"Harden the task API with validation,</span>
      <span style="color:#dbe4f3">rate limiting, and request logging."</span>
@@ -509,9 +512,8 @@
 <span style="color:#a879ff">AI:</span>  <span style="color:#9aa7be">Creating a voyage with 3 missions</span>
      <span style="color:#9aa7be">and dispatching in parallel...</span>
 
-     <span style="color:#616e88">&#x25B6; armada_voyage_create</span>
-     <span style="color:#616e88">&#x25B6; armada_voyage_dispatch</span>
-     <span style="color:#616e88">&#x25B6; armada_voyage_status ...</span>
+     <span style="color:#616e88">&#x25B6; dispatch (three explicit tasks)</span>
+     <span style="color:#616e88">&#x25B6; voyage_status ...</span>
 
      <span style="color:#34d399">&#10003; 3/3 missions complete.</span>
      <span style="color:#34d399">  Branches merged to main.</span>
@@ -526,13 +528,13 @@
         <span class="eyebrow">Single Pane of Glass</span>
         <h2>Every agent, every repo &mdash; one live view</h2>
         <p>
-          A dashboard with live WebSocket updates ships embedded in the server, in nine languages. Watch captains,
-          missions, voyages, signals, and the merge queue across all your projects without juggling a dozen terminals.
+          The embedded dashboard brings captains, missions, voyages, and the merge queue into one view, with
+          live WebSocket updates. English and eight beta locales are available across the dashboard, TUI, and mobile app.
         </p>
         <ul class="ticks">
-          <li><span class="ck">&#10003;</span><span>Full mission history, logs, diffs, and signals stay in <b>queryable memory</b> &mdash; pick up exactly where you left off.</span></li>
+          <li><span class="ck">&#10003;</span><span>Mission history, logs, diffs, and signals form a <b>queryable record</b>, subject to your retention settings. Find the evidence before deciding what to do next.</span></li>
           <li><span class="ck">&#10003;</span><span>A <b>Needs-You inbox</b> surfaces everything awaiting a human decision, most-urgent first.</span></li>
-          <li><span class="ck">&#10003;</span><span>A keyboard-first <b>terminal UI</b> (<code>armada tui</code>) opens every dashboard screen, plus an Approvals center where one key approves a proposal, a review, or a captain's shell command. Focus is always visible and the status bar shows the keys that work right now, over SSH or on machines without a browser.</span></li>
+          <li><span class="ck">&#10003;</span><span>The keyboard-first <b>terminal UI</b> (<code>armada tui</code>) covers dashboard screens and adds an Approvals center. Visible focus and contextual key hints help you review work over SSH or without a browser.</span></li>
         </ul>
         <a href="#capabilities" class="link-arrow">Explore capabilities <span class="ar">&rarr;</span></a>
       </div>
@@ -544,18 +546,18 @@
       </div>
     </div>
 
-    <!-- Row 3: In-app review & delivery -->
+    <!-- Row 3: Persona instructions and delivery controls -->
     <div class="showcase-row">
       <div class="sc-text fade-in">
-        <span class="eyebrow">Review &amp; Deliver</span>
-        <h2>Inspect the diff. Ship to production.</h2>
+        <span class="eyebrow">Define the Roles</span>
+        <h2>Make your workflow explicit.</h2>
         <p>
-          Review a captain's work as a line-colored unified diff, run shell commands in an in-browser terminal, and
-          take the change all the way to production &mdash; without leaving Armada.
+          Give each persona an editable prompt, choose its preferred captain classes, and set the review gates
+          between stages. Review diffs in the workspace and use configured delivery workflows when it is time to deploy.
         </p>
         <ul class="ticks">
-          <li><span class="ck">&#10003;</span><span>In-browser workspace: file tree, terminal, and full diff review.</span></li>
-          <li><span class="ck">&#10003;</span><span>Environments &amp; deployments with <b>approvals, verification, and rollback</b>; releases with derived notes.</span></li>
+          <li><span class="ck">&#10003;</span><span><b>Editable persona templates</b> carry requirements, evidence, tool limits, and handoff instructions into each stage.</span></li>
+          <li><span class="ck">&#10003;</span><span>The in-browser workspace provides file access, a terminal, and <b>diff review</b>; delivery workflows add approvals, verification, and rollback commands.</span></li>
           <li><span class="ck">&#10003;</span><span>A ranked <b>backlog</b>: refine an objective with a captain into acceptance criteria, then dispatch it.</span></li>
         </ul>
         <a href="#pipeline" class="link-arrow">See the pipeline <span class="ar">&rarr;</span></a>
@@ -577,7 +579,7 @@
     <div class="section-head fade-in">
       <span class="eyebrow">Product Tour</span>
       <h2 id="screenshots-title">See Armada in action</h2>
-      <p>Explore the dashboard, Harbor desktop app, and terminal UI. Expand a surface and select a screenshot to view it at full size.</p>
+      <p>Explore the dashboard, Harbor desktop app, and terminal UI. Expand a surface and select a screenshot to view it at full size. Activity charts include synthetic demonstration data.</p>
     </div>
     <div class="screenshot-galleries">
       <details class="screenshot-gallery">
@@ -700,48 +702,49 @@
   <div class="container">
     <div class="section-head fade-in">
       <span class="eyebrow">Quality Gates</span>
-      <h2>From prompt to production, with gates that run themselves</h2>
-      <p>Each mission flows through a configurable pipeline of persona stages &mdash; no manual hand-off between steps. Built-in pipelines cover the common paths (<code>WorkerOnly</code>, <code>Reviewed</code>, <code>Tested</code>, <code>Recorded</code>, <code>FullPipeline</code>), a <b>Linter</b> gate checks the changed code and documentation for style and correctness, a final non-gating <b>Recorder</b> stage distills what the voyage learned into durable memory, and every prompt is a template you can edit. <code>FullPipeline</code> adds Product Manager and Usability Engineer stages, and you choose which captain runs each step.</p>
+      <h2>Choose who plans, builds, tests, and reviews.</h2>
+      <p>Personas define the roles; pipelines define their order. Use <code>WorkerOnly</code> for a single implementation stage, <code>Reviewed</code> or <code>Tested</code> for additional checks, or <code>Recorded</code> to capture lessons. The sequence below shows the eight persona stages in <code>FullPipeline</code>.</p>
+      <p>Built-in multi-stage pipelines include human review gates. Approve the work, request changes, or edit the gates for unattended runs. Landing and deployment are separate choices, configured through landing modes and delivery workflow profiles.</p>
     </div>
     <div class="flow fade-in">
       <div class="flow-step">
-        <div class="fs-idx">01</div><div class="fs-persona">Architect</div><div class="fs-name">Plan</div>
-        <div class="fs-desc">Decompose the goal into missions with file lists and ordering.</div>
+        <div class="fs-idx">01</div><div class="fs-persona">ProductManager</div><div class="fs-name">Shape</div>
+        <div class="fs-desc">Define the user outcome, requirements, and acceptance criteria.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">02</div><div class="fs-persona">Worker</div><div class="fs-name">Implement</div>
-        <div class="fs-desc">Write the code in an isolated worktree on its own branch.</div>
+        <div class="fs-idx">02</div><div class="fs-persona">Architect</div><div class="fs-name">Plan</div>
+        <div class="fs-desc">Scope missions with file lists, dependencies, and self-contained handoffs.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">03</div><div class="fs-persona">TestEngineer</div><div class="fs-name">Test</div>
-        <div class="fs-desc">Take the diff and write tests that prove it works.</div>
+        <div class="fs-idx">03</div><div class="fs-persona">Worker</div><div class="fs-name">Implement</div>
+        <div class="fs-desc">Modify files in an isolated mission worktree.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">04</div><div class="fs-persona">Linter</div><div class="fs-name">Lint</div>
-        <div class="fs-desc">Check the changed code and docs for style and correctness; fix clear issues, flag the rest.</div>
+        <div class="fs-idx">04</div><div class="fs-persona">UsabilityEngineer</div><div class="fs-name">Usability</div>
+        <div class="fs-desc">Review the experience, edge cases, and product consistency.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">05</div><div class="fs-persona">Judge</div><div class="fs-name">Review</div>
-        <div class="fs-desc">Examine the diff against the mission &mdash; PASS or FAIL.</div>
+        <div class="fs-idx">05</div><div class="fs-persona">TestEngineer</div><div class="fs-name">Test</div>
+        <div class="fs-desc">Add relevant coverage and report executable checks and results.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">06</div><div class="fs-persona">Merge Queue</div><div class="fs-name">Land</div>
-        <div class="fs-desc">Local merge, pull request, or a merge queue that tests each branch against the latest target.</div>
+        <div class="fs-idx">06</div><div class="fs-persona">Linter</div><div class="fs-name">Lint</div>
+        <div class="fs-desc">Inspect changed code and docs; fix clear in-scope issues.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
-        <div class="fs-idx">07</div><div class="fs-persona">Delivery</div><div class="fs-name">Deploy</div>
-        <div class="fs-desc">Roll out with approvals, verification, and rollback.</div>
+        <div class="fs-idx">07</div><div class="fs-persona">Judge</div><div class="fs-name">Review</div>
+        <div class="fs-desc">Compare the result with the mission and return a structured verdict.</div>
       </div>
       <div class="flow-connector">&rarr;</div>
       <div class="flow-step">
         <div class="fs-idx">08</div><div class="fs-persona">Recorder</div><div class="fs-name">Remember</div>
-        <div class="fs-desc">Distill what the voyage learned into durable, queryable memory the whole fleet recalls.</div>
+        <div class="fs-desc">Capture useful lessons as durable memory when this stage is enabled.</div>
       </div>
     </div>
   </div>
@@ -752,29 +755,29 @@
   <div class="container">
     <div class="section-head fade-in">
       <span class="eyebrow">Capabilities</span>
-      <h2>Built from the ground up, with AI, for AI</h2>
-      <p>Everything you need to orchestrate multi-agent work at scale &mdash; from isolation and reliability to observability and delivery.</p>
+      <h2>Less coordination work. More visible progress.</h2>
+      <p>Keep independent work moving while retaining control over instructions, permissions, review, and landing.</p>
     </div>
     <div class="bento fade-in">
       <div class="tile feature">
         <div class="ti">&#129504;</div>
         <h3>Durable agent memory</h3>
-        <p>Your fleet's work doesn't vanish when a voyage ends. A built-in <strong>Recorder</strong> persona distills every voyage into episodic, semantic, and procedural memory &mdash; persisted to a native store, the vessel's model context, and any external memory tools. Every persona recalls it before acting, so the fleet compounds what it learns. Fully queryable over REST and MCP: leave, come back, and just <em>ask</em> what it knows.</p>
+        <p>Add the <strong>Recorder</strong> stage to store useful lessons as episodic, semantic, or procedural memory. Search the native memory store through REST or MCP and carry repository context into later missions. Keep decisions, evidence, and follow-up steps with provenance so later agents can search what was learned.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9878;</div>
         <h3>Git worktree isolation</h3>
-        <p>Every agent works in its own isolated git worktree on its own branch. Broad-scope conflict detection prevents concurrent mutations, and your main branch stays clean until you merge. Zero-config: <code>armada go</code> detects the runtime, registers the repo, and provisions worktrees automatically.</p>
+        <p>Implementation missions get separate worktrees and branches. Broad-scope scheduling reserves a vessel exclusively when requested, while normal independent work can run in parallel. Integration can still have conflicts; your chosen landing mode determines when changes reach the target branch.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9879;</div>
         <h3>Merge queue</h3>
-        <p>Choose a landing mode per vessel or voyage: local merge, pull request, or the merge queue, which tests and lands each branch in turn with hard subprocess timeouts and a durable coordination lease. Optional auto-push, auto-PR, and auto-merge.</p>
+        <p>Choose <strong>LocalMerge</strong>, <strong>MergeAndPush</strong>, <strong>PullRequest</strong>, <strong>MergeQueue</strong>, or <strong>None</strong>. In queue mode, branches are integrated serially against the current target, with configured checks and recorded results. Enable PR auto-merge only when it fits your workflow.</p>
       </div>
       <div class="tile s2">
         <div class="ti">&#9741;</div>
         <h3>MCP + REST + WebSocket</h3>
-        <p>A standards-compliant MCP server, a full CRUD REST API on port 7890 with built-in OpenAPI, and live event streaming at <code>/ws</code>. Frozen at 1.0: additive-only across 1.x.</p>
+        <p>An MCP server, REST API with OpenAPI on port 7890, and WebSocket events at <code>/ws</code> let scripts and agents work from the same durable state. The 1.x compatibility policy documents its stable surface and experimental exclusions.</p>
       </div>
       <div class="tile s2">
         <div class="ti">&#128451;</div>
@@ -784,12 +787,12 @@
       <div class="tile s2">
         <div class="ti">&#128202;</div>
         <h3>Built-in observability</h3>
-        <p>Opt-in OpenTelemetry export to OTLP, Prometheus, and Loki. The Docker stack ships Grafana with a pre-provisioned "Armada Reliability" dashboard.</p>
+        <p>Inspect mission history, API request activity, model token charts, and daily token heatmaps. Harbor charts show jobs, occupied slots, launch speed, and link health. OpenTelemetry export and the Docker Grafana stack support deeper operational monitoring.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9851;</div>
         <h3>Self-healing reliability</h3>
-        <p>Stall detection catches live-but-silent agents, crashed captains are repaired and relaunched, PID-identity verification prevents stuck "Working" states, and non-destructive dock repair unsticks jams.</p>
+        <p>Stall detection and dock repair can relaunch agents within configured retry limits. Eligible mechanical failures can trigger bounded rescue missions. Failures that require judgment stay visible for a person to resolve.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9781;</div>
@@ -803,23 +806,33 @@
       </div>
       <div class="tile s3">
         <div class="ti">&#128274;</div>
-        <h3>Multi-tenant, secure by default</h3>
-        <p>Tenants, users, and roles with bearer and session auth, and authorization on every route and MCP tool. Each captain gets a <strong>mission-scoped MCP token</strong>, you decide whether a captain's own shell and tools are refused, approved one call at a time in Armada, or bypassed, an Admiral on default credentials stays on localhost, and every shell command Armada runs is audited.</p>
+        <h3>Permissions and tenant boundaries</h3>
+        <p>Tenant-scoped access, secret redaction, and CLI permission policies give you control over who can act and how tools are approved. Operator commands have audit records. Mission tools may bypass approval by default; choose policies appropriate to your environment.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9875;</div>
         <h3>Local or split with Harbors</h3>
-        <p>Run the Admiral standalone on your machine (Local mode), or detach it &mdash; containerized or remote &mdash; while a <strong>Harbor</strong> host-runner executes agent CLIs, git, and worktrees where your repos and tool logins actually live (Split mode).</p>
+        <p>Run captain processes on the Admiral host, or use a <strong>Harbor</strong> where your repositories, git credentials, and agent logins live. The Harbor connects outward to a containerized or remote Admiral. Split mode remains experimental.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#128268;</div>
         <h3>Bring your own inference</h3>
-        <p>Beyond the six CLI agents, register a hosted or local model as an <strong>API-endpoint captain</strong> &mdash; OpenAI-compatible, Azure OpenAI, Anthropic, Vertex AI, Bedrock, or Ollama &mdash; and it runs an in-process tool loop against Armada's own tools. Keys are write-only.</p>
+        <p>Use CLI captains or register a supported hosted/local inference endpoint for an <strong>ApiEndpoint</strong> captain. OpenAI-compatible, Azure OpenAI, Anthropic, Gemini, Vertex AI, Bedrock, and Ollama adapters support provider-specific configuration. Configure model selection and tool access for each captain.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#8635;</div>
-        <h3>Self-updating</h3>
-        <p>Rebuild the Admiral from its own source and cut over to the new build with near-zero downtime, straight from the dashboard &mdash; A/B versioned slots, a pre-cutover database backup, and one-click rollback.</p>
+        <h3>Controlled upgrades</h3>
+        <p>Experimental source rebuild supports configured native Windows deployments with versioned slots, SQLite backup, and rollback controls. Docker installations update by pulling and recreating their containers. See the deployment guides for setup and limitations.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#129517;</div>
+        <h3>Persona-based captain routing</h3>
+        <p>Rank preferred runtime, model, Mux endpoint, or capability-tier classes on each persona. Decide whether a busy first choice waits or falls through. Any role can prefer a local or hosted model; the pipeline stays independent of that choice.</p>
+      </div>
+      <div class="tile s3">
+        <div class="ti">&#128241;</div>
+        <h3>Review from your phone</h3>
+        <p>The iOS/Android client provides saved connection profiles, biometric unlock, activity views, and push approval flows. Deny supported requests from a notification; approving opens the full request. Available as builds, with app-store distribution pending.</p>
       </div>
       <div class="tile s3">
         <div class="ti">&#9992;</div>
@@ -841,14 +854,14 @@
     <div class="why-grid fade-in">
       <div class="why-item"><div class="why-num">01</div><div><h3>Single pane of glass</h3><p>Monitor and manage all AI agent work across every project from one dashboard, in the browser or the terminal.</p></div></div>
       <div class="why-item"><div class="why-num">02</div><div><h3>Reduced context-switching</h3><p>History, logs, diffs, and signals are preserved, so you pick up exactly where you left off.</p></div></div>
-      <div class="why-item"><div class="why-num">03</div><div><h3>Scale across more projects</h3><p>Dispatch parallel missions across multiple repositories at once &mdash; more than one developer normally could.</p></div></div>
+      <div class="why-item"><div class="why-num">03</div><div><h3>Scale across more projects</h3><p>Keep independent work moving across repositories at once, with each result tracked back to its task and project.</p></div></div>
       <div class="why-item"><div class="why-num">04</div><div><h3>Planning meets conversational AI</h3><p>Task tracking and orchestration sit directly inside agents like Claude Code, bridging planning and execution.</p></div></div>
-      <div class="why-item"><div class="why-num">05</div><div><h3>Safe isolated worktrees</h3><p>Every agent works in its own git worktree, so parallel work never collides.</p></div></div>
-      <div class="why-item"><div class="why-num">06</div><div><h3>Automated merge queues</h3><p>Completed missions queue for merge automatically, keeping your integration pipeline flowing.</p></div></div>
+      <div class="why-item"><div class="why-num">05</div><div><h3>Isolated mission worktrees</h3><p>Separate mission worktrees keep concurrent edits apart; landing checks and review address integration conflicts.</p></div></div>
+      <div class="why-item"><div class="why-num">06</div><div><h3>Automated merge queues</h3><p>Choose queue-based landing to integrate branches one at a time with configured checks and recorded outcomes.</p></div></div>
       <div class="why-item"><div class="why-num">07</div><div><h3>Auditable event trails</h3><p>Every dispatch, transition, completion, and failure is recorded in a structured, queryable log.</p></div></div>
-      <div class="why-item"><div class="why-num">08</div><div><h3>Reproducible workflows</h3><p>Voyages capture a batch of missions as a reusable unit; retry or re-dispatch with a single command.</p></div></div>
-      <div class="why-item"><div class="why-num">09</div><div><h3>Team visibility</h3><p>Real-time WebSocket updates, a REST API, and notifications keep everyone informed without polling.</p></div></div>
-      <div class="why-item"><div class="why-num">10</div><div><h3>Productivity anywhere</h3><p>Dispatch remotely, check progress from any device or an SSH session, and let agents keep shipping while you step away.</p></div></div>
+      <div class="why-item"><div class="why-num">08</div><div><h3>Reproducible workflows</h3><p>Define repeatable stages with pipelines and reusable guidance with playbooks. Voyages keep related missions together with dependencies and outcomes.</p></div></div>
+      <div class="why-item"><div class="why-num">09</div><div><h3>Team visibility</h3><p>Shared status, WebSocket updates, and supported notification flows help teammates see progress and decisions from the same record.</p></div></div>
+      <div class="why-item"><div class="why-num">10</div><div><h3>Productivity anywhere</h3><p>Dispatch and inspect work from a browser, terminal, or mobile app. Approval flows bring pending decisions back to you.</p></div></div>
     </div>
   </div>
 </section>
@@ -861,10 +874,9 @@
         <span class="eyebrow" style="margin-bottom:22px">Architecture</span>
         <h2 style="font-size:clamp(1.8rem,3.8vw,2.7rem);font-weight:800;letter-spacing:-0.03em;line-height:1.08;margin-bottom:20px">Built for reliability, not complexity</h2>
         <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.75;margin-bottom:24px">
-          Pure .NET, cross-platform, with zero-install embedded SQLite by default &mdash; and connection-pooled
-          PostgreSQL, MySQL, or SQL Server when you're ready to scale. A single Admiral coordinates everything;
-          every captain works in its own isolated worktree. Run it all on one machine, or detach the Admiral to
-          a container or remote host while a Harbor executes agents and git where your repos live.
+          A cross-platform .NET Admiral owns the orchestration state, using embedded SQLite by default or
+          PostgreSQL, MySQL, or SQL Server. Implementation missions use isolated worktrees. Run agents on the
+          Admiral host or connect an experimental Harbor runner where your repositories and CLI logins live.
         </p>
         <a href="#start" class="link-arrow">Run it locally <span class="ar">&rarr;</span></a>
       </div>
@@ -911,7 +923,7 @@
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada inbox --critical">armada inbox --critical</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Everything that needs a human: reviews, failed landings and merges, pending approvals.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada health">armada health</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Grade every vessel: drift, stale branches, outdated or vulnerable packages, tests, and CI.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada log &lt;captain&gt; -f">armada log &lt;captain&gt; -f</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Tail a specific agent's output in real time. Like <code>tail -f</code> for your AI agents.</div></div>
-      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Auto-install and configure the MCP server for Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</div></div>
+      <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada mcp install">armada mcp install</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">Configure Armada MCP entries for supported clients, including Claude Code, Codex, Gemini, Cursor, Mux, and OpenCode.</div></div>
       <div class="cli-card"><div class="cli-cmd-row"><div class="cli-cmd" data-copy="armada doctor">armada doctor</div><button class="copy-btn" onclick="copyCode(this)" aria-label="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div><div class="cli-desc">System health check. Validates runtimes, connectivity, git state, and configuration.</div></div>
     </div>
   </div>
@@ -922,14 +934,14 @@
   <div class="container">
     <div class="section-head fade-in">
       <span class="eyebrow">Quick Start</span>
-      <h2>Up and running in minutes</h2>
-      <p>Just the .NET 8+ SDK and at least one AI coding agent on your PATH. Zero to a fleet in under five minutes, or open <strong>Ask Armada</strong> in the dashboard or <code>armada tui</code> and describe what you want. Prefer containers? Run the <code>jchristn77/armada-server</code> image; see the <a href="https://github.com/jchristn/Armada/blob/main/docs/DOCKER.md" target="_blank">Docker guide</a>.</p>
+      <h2>Start with one repository.</h2>
+      <p>For the default source install, use the .NET 10 SDK and a supported agent CLI on your PATH, signed in. .NET 8 builds are supported with <code>--framework net8.0</code>. Register an inference endpoint if you prefer an API captain. Prefer containers? See the <a href="https://github.com/jchristn/Armada/blob/main/docs/DOCKER.md" target="_blank" rel="noopener noreferrer">Docker guide</a>; a remote or containerized Admiral can use an experimental Harbor runner for your local agents.</p>
     </div>
     <div class="steps fade-in">
       <div class="step">
         <div class="step-num">1</div>
         <h3>Install Armada</h3>
-        <p>Clone the repo and run the install script for your OS (<code>linux</code>, <code>macos</code>, or <code>windows</code>):</p>
+        <p>Clone the repo and run your platform's install script. macOS is shown below; Linux uses <code>scripts/linux/install.sh</code>, and Windows uses <code>scripts\windows\install.bat</code>.</p>
         <div class="code-block-wrap">
           <code class="block" data-copy="git clone https://github.com/jchristn/armada&#10;cd armada&#10;./scripts/macos/install.sh">git clone https://github.com/jchristn/armada
 cd armada
@@ -980,6 +992,8 @@ claude --agent armada</code>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/ASK_ARMADA_HOME_BASE.md" target="_blank" class="doc-card"><div class="doc-icon">&#128172;</div><h3>Ask Armada</h3><p>Conversations, proposals and approvals, quick actions, and work tracking.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/TUI.md" target="_blank" class="doc-card"><div class="doc-icon">&#9000;</div><h3>Terminal UI</h3><p>Profiles, every screen, the Approvals center, and the full key map.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/DOCKER.md" target="_blank" class="doc-card"><div class="doc-icon">&#128230;</div><h3>Docker Deployment</h3><p>Images, compose stacks, split mode, the proxy, and troubleshooting.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/CAPTAIN_ROUTING.md" target="_blank" rel="noopener noreferrer" class="doc-card"><div class="doc-icon">&#129517;</div><h3>Persona Captain Priorities</h3><p>Runtime, model, endpoint and tier matching, with configurable wait and fallback policies.</p></a>
+      <a href="https://github.com/jchristn/Armada/blob/main/docs/MOBILE.md" target="_blank" rel="noopener noreferrer" class="doc-card"><div class="doc-icon">&#128241;</div><h3>Mobile App</h3><p>Connection profiles, activity, push approvals, and building the iOS/Android client.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/docs/CAPTAINS.md" target="_blank" class="doc-card"><div class="doc-icon">&#129517;</div><h3>Captain Support Matrix</h3><p>What each runtime supports, how it launches, and running agents safely.</p></a>
       <a href="https://github.com/jchristn/Armada/blob/main/Armada.postman_collection.json" target="_blank" class="doc-card"><div class="doc-icon">&#128188;</div><h3>Postman Collection</h3><p>Ready-to-import collection for the full REST API surface.</p></a>
     </div>
@@ -990,8 +1004,8 @@ claude --agent armada</code>
 <section class="cta">
   <div class="container">
     <img src="assets/logo.png" alt="Armada logo" class="cta-logo">
-    <h2>Ready to scale yourself?</h2>
-    <p>Install Armada, run <code>armada go</code>, and let your fleet handle the rest.</p>
+    <h2>Ready to put more work in flight?</h2>
+    <p>Start with an independent task, inspect the result, then add the routing, gates, and parallelism that fit your work.</p>
     <div class="hero-ctas">
       <a href="#start" class="btn btn-primary">Get Started</a>
       <a href="https://github.com/jchristn/Armada" target="_blank" class="btn btn-secondary">
@@ -1008,7 +1022,7 @@ claude --agent armada</code>
     <div class="footer-inner">
       <div class="footer-about">
         <div class="footer-brand"><img src="assets/logo.png" alt="Armada"><span>Armada</span></div>
-        <p>Multi-agent AI orchestration for developers who want to scale. Open source under the MIT license. Built with .NET, zero-install by default.</p>
+        <p>Multi-agent AI orchestration for developers who want to scale. Open source under the MIT license. Self-hosted on .NET, with embedded SQLite by default.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
